@@ -31,7 +31,7 @@ public:
 
     // Maybe add some more methods here
 
-    void createGraph();
+    vector<ActorNode*> createGraph();
     
     void createEdges(ActorNode* node1, ActorNode* node2);
 

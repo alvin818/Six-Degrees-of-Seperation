@@ -131,7 +131,7 @@ bool ActorGraph::loadFromFile(const char* in_filename, bool use_weighted_edges) 
    Will create graph using the vector of  actornodes and create the edges
    for the graph and update the adjaceny lists of the actor nodes
 */
-void ActorGraph::createGraph(){
+vector<ActorNode*> ActorGraph::createGraph(){
 
     /* 
        Nested loop: outer loop starts at first node in vector, inner loop starts at second node
