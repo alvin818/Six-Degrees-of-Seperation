@@ -11,6 +11,8 @@
 #define ACTORGRAPH_H
 
 #include <iostream>
+#include <vector>
+#include "ActorNode.h"
 
 // Maybe include some data structures here
 
@@ -18,14 +20,21 @@ using namespace std;
 
 class ActorGraph {
 protected:
-  
+      
     // Maybe add class data structure(s) here
+
+    // Vector will hold all nodes in graph 
+    vector<ActorNode*> graph;
 
 public:
     ActorGraph(void);
 
     // Maybe add some more methods here
-  
+
+    void createGraph();
+    
+    void createEdges(ActorNode* node1, ActorNode* node2);
+
     /** You can modify this method definition as you wish
      *
      * Load the graph from a tab-delimited file of actor->movie relationships.
