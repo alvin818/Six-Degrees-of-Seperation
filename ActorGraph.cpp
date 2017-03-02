@@ -68,7 +68,7 @@ bool ActorGraph::loadFromFile(const char* in_filename, bool use_weighted_edges) 
 		// Combine movie title and year into string variable
 		string movieKey = (movie_title + " " + to_string(movie_year));
 		// exmaple: "Memento 2000" would be key for this movie object
-
+    cout << movieKey << endl;
 		/*  Create movie class objects with given values
 			Use Movie title + year as key for unordered_map
 			Put the movie object as value
@@ -120,12 +120,16 @@ bool ActorGraph::loadFromFile(const char* in_filename, bool use_weighted_edges) 
    5. Repeat steps 2 - 4 for the whole list of actors 
    6. Reinsert the node into the has table/map
 */
-void ActorGraph::createActorNodes(){
+unordered_map<string, ActorNode*> ActorGraph::createActorNodes(){
 
 	// For each movie object, do the following....
 	for (auto it = movies_map.begin(); it != movies_map.end(); ++it){
+    cout << "Created movie object for following movies: " << endl;
+
 		Movie *currMovieObj = it->second;
 		string movieName = it->first;
+    cout << movieName << endl;
+
 		unordered_set<string> currActorList = currMovieObj->_actors;
 		
 		// For each actor in actor list, do the following....
@@ -138,8 +142,10 @@ void ActorGraph::createActorNodes(){
 				ActorNode *newActor = new ActorNode(*actor);
 				//call create edges, pass in actor node and
 				newActor = createEdges(newActor, currActorList, movieName);
+        cout << "Created new actor node for:" << endl;
 				// Create pair: key(actor name) and new actor node
 				pair<string, ActorNode*> actorPair(*actor, newActor);
+        cout << actorPair.second->actorName << endl;
 				actorNode_map.insert(actorPair);
 			}
 			
@@ -156,7 +162,7 @@ void ActorGraph::createActorNodes(){
 	}
 
 
-
+return actorNode_map; 
 }
 
 /*Created edges for the given actor node using the list from the movie object*/

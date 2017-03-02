@@ -29,7 +29,6 @@ int main(int argc, char *argv[]){
 
 	ActorGraph actor_graph;
   const char* in_filename = argv[1];
-  cout << in_filename << endl;
   //if(argv[2] == 'w'){
     //weightedEdges = true;
   //}
@@ -39,8 +38,22 @@ int main(int argc, char *argv[]){
 		// return -1 if loadFromFile returns false
 		return -1;
 	}
-	
-	actor_graph.createActorNodes();
+  	
+  unordered_map<string, ActorNode*> map = actor_graph.createActorNodes();
+
+  // print the actor nodes
+  for(auto currNode = map.begin(); currNode != map.end(); currNode++){
+    ActorNode *actor_node = currNode->second;
+    cout << "Actor name of node : " << actor_node->actorName << endl;
+    // print edges
+    unordered_set<ActorEdge*> edgeList = actor_node->movieEdges;
+    cout << "Actor has connections with the following actors:" << endl;
+    for (auto itr = edgeList.begin(); itr != edgeList.end(); ++itr){
+      cout << (*itr)->coStarName << " in film: " << (*itr)->movieInfo << endl;
+    }
+    cout << endl;
+
+  }
 
 	/* now use argv[3]: test_pairs.tsv argv[4]: out_paths_unweighted 
        to do breadth first search

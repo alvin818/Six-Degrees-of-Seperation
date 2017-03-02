@@ -35,7 +35,7 @@ public:
 
     // Maybe add some more methods here
 
-    void createActorNodes();
+    unordered_map<string, ActorNode*> createActorNodes();
     
     ActorNode* createEdges(ActorNode*, unordered_set<string>, string);
 
