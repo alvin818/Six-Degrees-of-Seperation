@@ -19,14 +19,11 @@ public:
 	/* 
 	   Edge will contain a pair: 
 	   movie (name + year) & name of costar 
-	*/	
-
-	string movieName;
-	int movieYear;
-
-	// this will be updated when the graph & edges is created
+	*/
+	string movieInfo;
+	// name of co-star in film
 	string coStarName;
 
-	ActorEdge(string name, int year);
+	ActorEdge(string movie, string name);
 };
 #endif

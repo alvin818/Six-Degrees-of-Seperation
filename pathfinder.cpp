@@ -29,7 +29,7 @@ int main(int argc, char *argv[]){
 
 	ActorGraph actor_graph;
   const char* in_filename = argv[1];
-  
+  cout << in_filename << endl;
   //if(argv[2] == 'w'){
     //weightedEdges = true;
   //}
@@ -39,9 +39,8 @@ int main(int argc, char *argv[]){
 		// return -1 if loadFromFile returns false
 		return -1;
 	}
-  
-
-  vector<ActorNode*> graph = actor_graph.createGraph();
+	
+	actor_graph.createActorNodes();
 
 	/* now use argv[3]: test_pairs.tsv argv[4]: out_paths_unweighted 
        to do breadth first search

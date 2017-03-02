@@ -12,10 +12,13 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <unordered_map>
 #include <unordered_set>
 #include "ActorGraph.h"
 #include "ActorNode.h"
 #include "ActorEdge.h"
+#include "Movie.h"
+
 
 using namespace std;
 
@@ -30,92 +33,72 @@ bool ActorGraph::loadFromFile(const char* in_filename, bool use_weighted_edges) 
     int counter = 0;
   
     // keep reading lines until the end of file is reached
-    while (infile) {
-        string s;
-    
-        // get the next line
-        if (!getline( infile, s )) break;
-        if (!have_header) {
-            // skip the header
-            have_header = true;
-            continue;
-        }
+	while (infile) {
+		string s;
 
-        istringstream ss( s );
-        vector <string> record;
+		// get the next line
+		if (!getline(infile, s)) break;
+		if (!have_header) {
+			// skip the header
+			have_header = true;
+			continue;
+		}
 
-        while (ss) {
-            string next;
-      
-            // get the next string before hitting a tab character and put it in 'next'
-            if (!getline( ss, next, '\t' )) break;
+		istringstream ss(s);
+		vector <string> record;
 
-            record.push_back( next );
-        }
-    
-        if (record.size() != 3) {
-            // we should have exactly 3 columns
-            continue;
-        }
+		while (ss) {
+			string next;
 
-        string actor_name(record[0]);
-        string movie_title(record[1]);
-        int movie_year = stoi(record[2]);
+			// get the next string before hitting a tab character and put it in 'next'
+			if (!getline(ss, next, '\t')) break;
 
-        /*  Two possible inputs:
-            1. new actor name with movie
-            2. actor with node already created
-            
-            case 1: create new node and create new edge and add
-            edge to adjacency list of new node
-            case 2: add new edge using movie info
+			record.push_back(next);
+		}
 
-        */
+		if (record.size() != 3) {
+			// we should have exactly 3 columns
+			continue;
+		}
 
-        if(counter == 0){ 
-            // Create graph node using actors name
-            ActorNode *newNode = new ActorNode(actor_name);
-            // create new edge
-            ActorEdge *newEdge = new ActorEdge( movie_title, movie_year);
-            // add edge to actornode 
-            newNode->edges.insert(newEdge);
-            // push new node into graph vector
-            graph.push_back(newNode);
-            // increment count since new node was made
-            counter++;
-        }
+		string actor_name(record[0]);
+		string movie_title(record[1]);
+		int movie_year = stoi(record[2]);
 
-        // Now check actor node exists for given input
-        if(actor_name == graph.at(counter - 1)->actorName){
-            
-            /* 
-               if actor node exists then simply create new edge 
-               and add to actor node 
-            */
+		// Combine movie title and year into string variable
+		string movieKey = (movie_title + " " + to_string(movie_year));
+		// exmaple: "Memento 2000" would be key for this movie object
 
-            // create new edge
-            ActorEdge *newEdge = new ActorEdge( movie_title, movie_year);
-            // add edge to actornode 
-           graph.at(counter - 1)->edges.insert(newEdge);
-            // push new node into graph vector
-        }
-        // New actor node created
-        else{
-            // Create new actor node
-            ActorNode *newNode = new ActorNode(actor_name);
-            // create new edge
-            ActorEdge *newEdge = new ActorEdge( movie_title, movie_year);
-            // add edge to actornode 
-            newNode->edges.insert(newEdge);
-            // push new node into graph vector
-            // Add new node to graph
-            graph.push_back(newNode);
-            // increment count since new node was made
-            counter++;
-        }
-		cout << "Created node for actor: " << graph.at(counter)->actorName << endl;
-        // node have an actor/movie relationship, now what?
-        
+		/*  Create movie class objects with given values
+			Use Movie title + year as key for unordered_map
+			Put the movie object as value
+			Use key to make sure movie object has not been made
+
+			*/
+
+		// First check if movie object has not been made for input
+		unordered_map<string, Movie*>::const_iterator got = movies_map.find(movieKey);
+
+		// If key is not found then create new movie object and add it to map
+		if (got == movies_map.end()){
+			Movie *newMovie = new Movie(movieKey);
+			newMovie->_actors.insert(actor_name);
+			pair<string, Movie*> moviePair(movieKey, newMovie);
+			movies_map.insert(moviePair);
+		}
+		// Add actor to movie object that has been created
+		else{
+			Movie *movieObject = got->second;
+			movieObject->_actors.insert(actor_name);
+		}
+	
+		/* 
+		   At this point the unordered_map of movie objects has been filled. 
+		   Now create the actorNodes using this data.
+		*/
+
+		// CreateActorNodes
+
     }
 
     if (!infile.eof()) {
@@ -127,56 +110,67 @@ bool ActorGraph::loadFromFile(const char* in_filename, bool use_weighted_edges) 
     return true;
 }
 
+
 /* 
-   Will create graph using the vector of  actornodes and create the edges
-   for the graph and update the adjaceny lists of the actor nodes
+   Will use the map of movie object to create actor nodes
+   1. Will retrieve the first movie obj, access the objects set of actors
+   2. First check if an actor node has not been created for it already
+   3. if not then create a node for actor and create an actor edge with the rest of the list
+   4. if node has been created then add to the nodes edge list with the rest of the cast
+   5. Repeat steps 2 - 4 for the whole list of actors 
+   6. Reinsert the node into the has table/map
 */
-vector<ActorNode*> ActorGraph::createGraph(){
+void ActorGraph::createActorNodes(){
 
-    /* 
-       Nested loop: outer loop starts at first node in vector, inner loop starts at second node
-       Check the movie names in edges of each node, if a match update both edges with each others 
-       actor name
-    */
-
-    vector<ActorNode*>::iterator it_1 = graph.begin();
-    // Outer loop begins ar first node
-    for(; it_1 != graph.end(); it_1++){
-        // Inner loop starting at second node
-        vector<ActorNode*>::iterator it_2 = graph.begin() + 1;
-        for(; it_2 != graph.end(); it_2++){
-            // now check edge vector inside each node; use helper function!!!
-            createEdges(*it_1, *it_2);
-        }
-
-    }
-
+	// For each movie object, do the following....
+	for (auto it = movies_map.begin(); it != movies_map.end(); ++it){
+		Movie *currMovieObj = it->second;
+		string movieName = it->first;
+		unordered_set<string> currActorList = currMovieObj->_actors;
+		
+		// For each actor in actor list, do the following....
+		for (auto actor = currActorList.begin(); actor != currActorList.end(); ++actor){
+			// Search actorNode map
+			unordered_map<string, ActorNode*>::iterator got = actorNode_map.find(*actor);
+			
+			// if node for actor does exist then create a new node
+			if (got == actorNode_map.end()){
+				ActorNode *newActor = new ActorNode(*actor);
+				//call create edges, pass in actor node and
+				newActor = createEdges(newActor, currActorList, movieName);
+				// Create pair: key(actor name) and new actor node
+				pair<string, ActorNode*> actorPair(*actor, newActor);
+				actorNode_map.insert(actorPair);
+			}
+			
+			// Node exists, simply update current actors node with edges
+			else{
+				ActorNode *existingActor = got->second;
+				existingActor = createEdges(existingActor, currActorList, movieName);
+				// Update the actor node already in map
+				got->second = existingActor;
+			}
+		}
 	
+	
+	}
+
+
+
 }
 
+/*Created edges for the given actor node using the list from the movie object*/
+ActorNode* ActorGraph::createEdges(ActorNode* node, unordered_set<string> actorList, string movieName){
 
-void ActorGraph::createEdges( ActorNode* actor_1, ActorNode* actor_2){
-    
-    /* 
-       Loop thru each nodes edge vector 
-       Check each each from actor_1 to actor_2
-       If there is a match update both edges with the others actors name
-    */ 
-    unordered_set<ActorEdge*> actor1Edges = actor_1->edges;
-    unordered_set<ActorEdge*> actor2Edges = actor_2->edges;
+	for (auto actor = actorList.begin(); actor != actorList.end(); actor++){
+		// create new edge object
+		if (*actor != node->actorName){
+			ActorEdge *newEdge = new ActorEdge(movieName, *actor);
+			// Add new edge to actor node
+			node->movieEdges.insert(newEdge);
+		}
+	
+	}
 
-    // Loop through actor1's edges
-    for (const auto& elem: actor1Edges) {
-
-        // iterator will hold edge that has the same movie
-        unordered_set<ActorEdge*>::iterator got = actor2Edges.find(elem);
-        // If the two nodes share a similar movie then update the edges
-        if(got != actor2Edges.end()){
-            // update actor1
-            elem->coStarName = actor_2->actorName;
-            // update actor 2
-            (*got)->coStarName = actor_1->actorName;
-        }
-    }    
-
+	return node;
 }

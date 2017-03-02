@@ -13,7 +13,9 @@
 #include <iostream>
 #include <vector>
 #include "ActorNode.h"
-
+#include "Movie.h"
+#include <unordered_map>
+#include <unordered_set>
 // Maybe include some data structures here
 
 using namespace std;
@@ -23,17 +25,19 @@ protected:
       
     // Maybe add class data structure(s) here
 
-    // Vector will hold all nodes in graph 
-    vector<ActorNode*> graph;
+    // will hold actorNodes and use actor names as key
+    unordered_map<string, ActorNode*> actorNode_map;
+	// Holds movie objects and use movie info as key
+	unordered_map<string, Movie*> movies_map;
 
 public:
     ActorGraph(void);
 
     // Maybe add some more methods here
 
-    vector<ActorNode*> createGraph();
+    void createActorNodes();
     
-    void createEdges(ActorNode* node1, ActorNode* node2);
+    ActorNode* createEdges(ActorNode*, unordered_set<string>, string);
 
     /** You can modify this method definition as you wish
      *

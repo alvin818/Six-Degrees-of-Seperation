@@ -11,8 +11,7 @@
 #include "ActorEdge.h"
 using namespace std;
 
-ActorEdge::ActorEdge(string movie, int year){
-	
-	movieName = movie;
-	movieYear = year;
+ActorEdge::ActorEdge(string movie, string name){	
+	movieInfo = movie;
+	coStarName = name;
 }

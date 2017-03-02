@@ -11,6 +11,7 @@
 #include <string>
 #include <vector>
 #include <unordered_set>
+#include "Movie.h"
 #include "ActorEdge.h"
 
 using namespace std;
@@ -27,7 +28,7 @@ public:
 	string actorName;
 	
 	// ajancency list of edges (movies) 
-	unordered_set<ActorEdge*> edges;
+	unordered_set<ActorEdge*> movieEdges;
 	
 	// initialize node with actor name
 	ActorNode(string name);
