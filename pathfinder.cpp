@@ -40,7 +40,7 @@ int main(int argc, char *argv[]){
 	}
   	
   unordered_map<string, ActorNode*> map = actor_graph.createActorNodes();
-
+/*
   // print the actor nodes
   for(auto currNode = map.begin(); currNode != map.end(); currNode++){
     ActorNode *actor_node = currNode->second;
@@ -54,6 +54,7 @@ int main(int argc, char *argv[]){
     cout << endl;
 
   }
+  */
   cout << "Entering BFS....." << endl;
   const char* pairFiles = argv[3];
 

@@ -66,7 +66,6 @@ bool ActorGraph::loadFromFile(const char* in_filename, bool use_weighted_edges) 
 		// Combine movie title and year into string variable
 		string movieKey = (movie_title + " " + to_string(movie_year));
 		// exmaple: "Memento 2000" would be key for this movie object
-    cout << movieKey << endl;
 		/*  Create movie class objects with given values
 			Use Movie title + year as key for unordered_map
 			Put the movie object as value
@@ -104,7 +103,7 @@ bool ActorGraph::loadFromFile(const char* in_filename, bool use_weighted_edges) 
         return false;
     }
     infile.close();
-
+    cout << endl;
     return true;
 }
 
@@ -122,11 +121,9 @@ unordered_map<string, ActorNode*> ActorGraph::createActorNodes(){
 
 	// For each movie object, do the following....
 	for (auto it = movies_map.begin(); it != movies_map.end(); ++it){
-    cout << "Created movie object for following movies: " << endl;
 
 		Movie *currMovieObj = it->second;
 		string movieName = it->first;
-    cout << movieName << endl;
 
 		unordered_set<string> currActorList = currMovieObj->_actors;
 		
@@ -140,10 +137,8 @@ unordered_map<string, ActorNode*> ActorGraph::createActorNodes(){
 				ActorNode *newActor = new ActorNode(*actor);
 				//call create edges, pass in actor node and
 				newActor = createEdges(newActor, currActorList, movieName);
-        cout << "Created new actor node for:" << endl;
 				// Create pair: key(actor name) and new actor node
 				pair<string, ActorNode*> actorPair(*actor, newActor);
-        cout << actorPair.second->actorName << endl;
 				actorNode_map.insert(actorPair);
 			}
 			
@@ -187,12 +182,16 @@ void ActorGraph::BFSearch(unordered_map<string, ActorNode*> actor_map, string st
 
     // get node using actors name
     ActorNode* currActorNode = getActorNode(startActor);
+    // Make parent ptr of first node null
+    currActorNode->parent = nullptr;
     // create queue of actorNodes
     queue<ActorNode*> actorQueue;
     // push first node into queue
     actorQueue.push(currActorNode);
     // have a set containing actor nodes already put into the queue
     unordered_set<ActorNode*> seenActorNodes;
+    unordered_map<string, string> seenActorEdges;
+    seenActorNodes.insert(currActorNode);
 
     while(!actorQueue.empty()){
         currActorNode = actorQueue.front();
@@ -205,18 +204,31 @@ void ActorGraph::BFSearch(unordered_map<string, ActorNode*> actor_map, string st
             // get actor node using name from edge list
             ActorNode* childrenNode = getActorNode((*edge)->coStarName);
             // check if node is the actor being searched for 
-            if(childrenNode->actorName == actorToFind){
+            /*if(childrenNode->actorName == actorToFind){
                 cout << "Actor has been found!" << endl;
+                childrenNode->parent = currActorNode;
 				// print path function.
-				printPath(childrenNode);
-                break;
-            }
+				printPath(seenActorEdges, childrenNode);
+                return;
+            }*/
             unordered_set<ActorNode*>::iterator got = seenActorNodes.find(childrenNode);
             // push node to queue if not found in set
             if(got == seenActorNodes.end()){
+            pair<string, string> edgePair((*edge)->coStarName,(*edge)->movieInfo);
+            seenActorEdges.insert(edgePair);
 				childrenNode->parent = currActorNode;
+        seenActorNodes.insert(childrenNode);
                 actorQueue.push(childrenNode);
             }
+             if(childrenNode->actorName == actorToFind){
+                cout << "Actor has been found!" << endl;
+                childrenNode->parent = currActorNode;
+				// print path function.
+				printPath(seenActorEdges, childrenNode);
+                return;
+            }
+
+
         }
 
     }
@@ -242,15 +254,25 @@ ActorNode* ActorGraph::getActorNode(string actorName){
 	nodes parent node. Traverse the parent nodes until the parent pointer
 	is null;
 */
-void ActorGraph::printPath(ActorNode* lastActorNode){
+void ActorGraph::printPath(unordered_map<string, string> edgeMap, ActorNode* lastActorNode){
 
 	cout << "Printing the path of the breadth first search......." << endl;
 	ActorNode *curr = lastActorNode;
-	while (curr){	
-		cout << curr->actorName << "\t";
-		curr = curr->parent;
-	}
+  	
+  while (curr){	
+    // get parents actor name to get the mutual film 
 
+    cout<< curr->actorName << "\t";
+    //curr = curr->parent;
+    unordered_map<string, string>::iterator got = edgeMap.find(curr->actorName);
+    if(got != edgeMap.end()){
+      cout << got->second <<"\t";
+    }
+    curr = curr->parent;
+
+	}
+  
+  cout << endl;
 }
 
 bool ActorGraph::getActorPairs(const char* in_filename){
@@ -290,9 +312,10 @@ bool ActorGraph::getActorPairs(const char* in_filename){
 
 		string actor_1(record[0]);
 		string actor_2(record[1]);
-
+    
+    cout << "Pair to find: " << actor_1 << "\t" << actor_2 << endl;
 		// Call breadth first search using two actors 
-		BFSearch(actorNode_map, actor_1, actor_2);
+		BFSearch(actorNode_map, actor_2, actor_1);
 			
 	}
 

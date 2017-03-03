@@ -48,7 +48,7 @@ public:
     ActorNode* getActorNode(string);
 	
 	// Will print path to console/file
-	void printPath(ActorNode*);
+	void printPath(unordered_map<string, string>, ActorNode*);
 	
 	// gets each set of pairs and calls BFS function
 	bool getActorPairs(const char* in_filename);
