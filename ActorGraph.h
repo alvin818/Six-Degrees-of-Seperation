@@ -9,7 +9,7 @@
 
 #ifndef ACTORGRAPH_H
 #define ACTORGRAPH_H
-
+#include <fstream> 
 #include <iostream>
 #include <vector>
 #include "ActorNode.h"
@@ -42,16 +42,16 @@ public:
     ActorNode* createEdges(ActorNode*, unordered_set<string>, string);
 
 	// Performs breadth first search starting from one string value to another
-    void BFSearch(unordered_map<string, ActorNode*>, string, string );
+    void BFSearch(unordered_map<string, ActorNode*>, string, string, ofstream&);
 	
 	// Helper function that returns the actornode using the actor name
     ActorNode* getActorNode(string);
 	
 	// Will print path to console/file
-	void printPath(unordered_map<string, string>, ActorNode*);
+	void printPath(unordered_map<string, string>, ActorNode*, ofstream&);
 	
 	// gets each set of pairs and calls BFS function
-	bool getActorPairs(const char* in_filename);
+	bool getActorPairs(const char* in_filename, ofstream& );
 
     /** You can modify this method definition as you wish
      *

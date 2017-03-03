@@ -21,7 +21,7 @@ int main(int argc, char *argv[]){
   
   bool weightedEdges = false;
   
-	if(argc != 4){
+	if(argc != 5){
 		cout << "Incorrect number of paramters" << endl;
 		return -1;
 	}
@@ -38,8 +38,9 @@ int main(int argc, char *argv[]){
 		// return -1 if loadFromFile returns false
 		return -1;
 	}
-  	
+  cout << "Creating actor graph...... ";
   unordered_map<string, ActorNode*> map = actor_graph.createActorNodes();
+  cout << "DONE" << endl;
 /*
   // print the actor nodes
   for(auto currNode = map.begin(); currNode != map.end(); currNode++){
@@ -57,9 +58,15 @@ int main(int argc, char *argv[]){
   */
   cout << "Entering BFS....." << endl;
   const char* pairFiles = argv[3];
-
-  if (!actor_graph.getActorPairs(pairFiles)){
-	  return -1;  
+  const char* outfile = argv[4];
+  
+  ofstream outFile(outfile, ofstream::out);
+  
+  outFile << "(actor)--[movie#@year]-->(actor)--..." << endl;
+  
+  if (!actor_graph.getActorPairs(pairFiles, outFile)){
+	  cout << "Loading in pairs failed..... exiting...." << endl;
+    return -1;  
   }
 
 	/* now use argv[3]: test_pairs.tsv argv[4]: out_paths_unweighted 

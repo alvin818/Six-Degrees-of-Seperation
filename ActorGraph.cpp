@@ -64,7 +64,7 @@ bool ActorGraph::loadFromFile(const char* in_filename, bool use_weighted_edges) 
 		int movie_year = stoi(record[2]);
 
 		// Combine movie title and year into string variable
-		string movieKey = (movie_title + " " + to_string(movie_year));
+		string movieKey = (movie_title + "#@" + to_string(movie_year));
 		// exmaple: "Memento 2000" would be key for this movie object
 		/*  Create movie class objects with given values
 			Use Movie title + year as key for unordered_map
@@ -178,8 +178,8 @@ ActorNode* ActorGraph::createEdges(ActorNode* node, unordered_set<string> actorL
 	Function performs breadth first search using a queue of actor nodes.
 	Will print the path to a file.
 */
-void ActorGraph::BFSearch(unordered_map<string, ActorNode*> actor_map, string startActor, string actorToFind){
-
+void ActorGraph::BFSearch(unordered_map<string, ActorNode*> actor_map, string startActor, string actorToFind, ofstream& outFile){
+    //ofstream outFile(out_filename, ofstream::out);
     // get node using actors name
     ActorNode* currActorNode = getActorNode(startActor);
     // Make parent ptr of first node null
@@ -229,7 +229,7 @@ void ActorGraph::BFSearch(unordered_map<string, ActorNode*> actor_map, string st
                 cout << "Actor has been found!" << endl;
                 childrenNode->parent = currActorNode;
 				// print path function.
-				printPath(seenActorEdges, childrenNode);
+				printPath(seenActorEdges, childrenNode, outFile);
                 return;
             }
 
@@ -237,10 +237,6 @@ void ActorGraph::BFSearch(unordered_map<string, ActorNode*> actor_map, string st
         }
 
     }
-
-
-
-
 }
 
 /*Helper function to retrieve the actor's node using the key (actor name)*/
@@ -259,28 +255,38 @@ ActorNode* ActorGraph::getActorNode(string actorName){
 	nodes parent node. Traverse the parent nodes until the parent pointer
 	is null;
 */
-void ActorGraph::printPath(unordered_map<string, string> edgeMap, ActorNode* lastActorNode){
 
-	cout << "Printing the path of the breadth first search......." << endl;
+void ActorGraph::printPath(unordered_map<string, string> edgeMap, ActorNode* lastActorNode, ofstream& outfile){
+	
+  cout << "Printing the path of the breadth first search......." << endl;
 	ActorNode *curr = lastActorNode;
-  	
+  cout << "Name of last node in path: " << curr->actorName << endl;
   while (curr){	
     // get parents actor name to get the mutual film 
 
-    cout<< curr->actorName << "\t";
-    //curr = curr->parent;
-    unordered_map<string, string>::iterator got = edgeMap.find(curr->actorName);
+    //cout << curr->actorName << "\t";
+    //outfile <<"(" << curr->actorName << ")" <<"--";
+  unordered_map<string, string>::iterator got = edgeMap.find(curr->actorName);
     if(got != edgeMap.end()){
-      cout << got->second <<"\t";
+      //cout << got->second <<"\t";
+      outfile <<"(" << got->first << ")" <<"--";
+      outfile << "[" << got->second << "]" << "-->";
+      //outfile <<"(" << got->first << ")" <<"--";
+    }
+    else{
+      outfile << "[" << curr->actorName << "]";
     }
     curr = curr->parent;
 
 	}
+
+  //outfile << "[" << curr->actorName << "]";
+  outfile << endl;
   
   cout << endl;
 }
 
-bool ActorGraph::getActorPairs(const char* in_filename){
+bool ActorGraph::getActorPairs(const char* in_filename, ofstream& out_filename){
 	// Initialize the file stream
 	ifstream infile(in_filename);
 
@@ -310,17 +316,17 @@ bool ActorGraph::getActorPairs(const char* in_filename){
 			record.push_back(next);
 		}
 
-		if (record.size() != 2) {
-			// we should have exactly 3 columns
+    if(record.size() != 2){
 			continue;
-		}
+    }  
+  
 
 		string actor_1(record[0]);
 		string actor_2(record[1]);
     
     cout << "Pair to find: " << actor_1 << "\t" << actor_2 << endl;
 		// Call breadth first search using two actors 
-		BFSearch(actorNode_map, actor_2, actor_1);
+		BFSearch(actorNode_map, actor_2, actor_1, out_filename);
 			
 	}
 
