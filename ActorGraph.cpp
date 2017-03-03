@@ -190,6 +190,7 @@ void ActorGraph::BFSearch(unordered_map<string, ActorNode*> actor_map, string st
     actorQueue.push(currActorNode);
     // have a set containing actor nodes already put into the queue
     unordered_set<ActorNode*> seenActorNodes;
+	// map of visited edges using actor name as key
     unordered_map<string, string> seenActorEdges;
     seenActorNodes.insert(currActorNode);
 
@@ -211,16 +212,20 @@ void ActorGraph::BFSearch(unordered_map<string, ActorNode*> actor_map, string st
 				printPath(seenActorEdges, childrenNode);
                 return;
             }*/
+			// See if node had been seen before
             unordered_set<ActorNode*>::iterator got = seenActorNodes.find(childrenNode);
             // push node to queue if not found in set
             if(got == seenActorNodes.end()){
+			// Create an edge pair with costar name and movie info
             pair<string, string> edgePair((*edge)->coStarName,(*edge)->movieInfo);
-            seenActorEdges.insert(edgePair);
-				childrenNode->parent = currActorNode;
-        seenActorNodes.insert(childrenNode);
-                actorQueue.push(childrenNode);
+            // insert into map
+			seenActorEdges.insert(edgePair);
+			childrenNode->parent = currActorNode;
+			seenActorNodes.insert(childrenNode);
+            actorQueue.push(childrenNode);
             }
-             if(childrenNode->actorName == actorToFind){
+
+            if(childrenNode->actorName == actorToFind){
                 cout << "Actor has been found!" << endl;
                 childrenNode->parent = currActorNode;
 				// print path function.
