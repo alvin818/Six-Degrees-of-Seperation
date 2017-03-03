@@ -20,12 +20,12 @@ using namespace std;
 int main(int argc, char *argv[]){
   
   bool weightedEdges = false;
-  /*
-	if(argc != 5){
+  
+	if(argc != 4){
 		cout << "Incorrect number of paramters" << endl;
 		return -1;
 	}
-  */
+  
 
   ActorGraph actor_graph;
   const char* in_filename = argv[1];
@@ -54,7 +54,7 @@ int main(int argc, char *argv[]){
     cout << endl;
 
   }
-
+  cout << "Entering BFS....." << endl;
   const char* pairFiles = argv[3];
 
   if (!actor_graph.getActorPairs(pairFiles)){

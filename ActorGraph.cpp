@@ -246,7 +246,7 @@ void ActorGraph::printPath(ActorNode* lastActorNode){
 
 	cout << "Printing the path of the breadth first search......." << endl;
 	ActorNode *curr = lastActorNode;
-	while (!curr){	
+	while (curr){	
 		cout << curr->actorName << "\t";
 		curr = curr->parent;
 	}
@@ -283,7 +283,7 @@ bool ActorGraph::getActorPairs(const char* in_filename){
 			record.push_back(next);
 		}
 
-		if (record.size() != 3) {
+		if (record.size() != 2) {
 			// we should have exactly 3 columns
 			continue;
 		}
