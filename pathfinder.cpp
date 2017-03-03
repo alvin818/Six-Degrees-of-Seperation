@@ -27,7 +27,7 @@ int main(int argc, char *argv[]){
 	}
   */
 
-	ActorGraph actor_graph;
+  ActorGraph actor_graph;
   const char* in_filename = argv[1];
   //if(argv[2] == 'w'){
     //weightedEdges = true;
@@ -54,6 +54,8 @@ int main(int argc, char *argv[]){
     cout << endl;
 
   }
+
+  actor_graph.BFSearch(map, );
 
 	/* now use argv[3]: test_pairs.tsv argv[4]: out_paths_unweighted 
        to do breadth first search

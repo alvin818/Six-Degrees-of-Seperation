@@ -35,9 +35,23 @@ public:
 
     // Maybe add some more methods here
 
+	// Creates ActorNodes
     unordered_map<string, ActorNode*> createActorNodes();
     
+	// Creates edges for each ActorNode
     ActorNode* createEdges(ActorNode*, unordered_set<string>, string);
+
+	// Performs breadth first search starting from one string value to another
+    void BFSearch(unordered_map<string, ActorNode*>, string, string );
+	
+	// Helper function that returns the actornode using the actor name
+    ActorNode* getActorNode(string);
+	
+	// Will print path to console/file
+	void printPath(ActorNode*);
+	
+	// gets each set of pairs and calls BFS function
+	bool getActorPairs(const char* in_filename);
 
     /** You can modify this method definition as you wish
      *

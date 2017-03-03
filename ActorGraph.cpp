@@ -18,7 +18,7 @@
 #include "ActorNode.h"
 #include "ActorEdge.h"
 #include "Movie.h"
-
+#include <queue>
 
 using namespace std;
 
@@ -28,9 +28,7 @@ bool ActorGraph::loadFromFile(const char* in_filename, bool use_weighted_edges) 
     // Initialize the file stream
     ifstream infile(in_filename);
 
-    bool have_header = false;
-
-    int counter = 0;
+    bool have_header = false;    
   
     // keep reading lines until the end of file is reached
 	while (infile) {
@@ -179,4 +177,130 @@ ActorNode* ActorGraph::createEdges(ActorNode* node, unordered_set<string> actorL
 	}
 
 	return node;
+}
+
+/*
+	Function performs breadth first search using a queue of actor nodes.
+	Will print the path to a file.
+*/
+void ActorGraph::BFSearch(unordered_map<string, ActorNode*> actor_map, string startActor, string actorToFind){
+
+    // get node using actors name
+    ActorNode* currActorNode = getActorNode(startActor);
+    // create queue of actorNodes
+    queue<ActorNode*> actorQueue;
+    // push first node into queue
+    actorQueue.push(currActorNode);
+    // have a set containing actor nodes already put into the queue
+    unordered_set<ActorNode*> seenActorNodes;
+
+    while(!actorQueue.empty()){
+        currActorNode = actorQueue.front();
+        actorQueue.pop();
+        // now get all adjacent actors via edges
+        auto edge = currActorNode->movieEdges.begin();
+        // for each name in edge, get node and add to queue
+        for(; edge != currActorNode->movieEdges.end(); ++edge){    
+
+            // get actor node using name from edge list
+            ActorNode* childrenNode = getActorNode((*edge)->coStarName);
+            // check if node is the actor being searched for 
+            if(childrenNode->actorName == actorToFind){
+                cout << "Actor has been found!" << endl;
+				// print path function.
+				printPath(childrenNode);
+                break;
+            }
+            unordered_set<ActorNode*>::iterator got = seenActorNodes.find(childrenNode);
+            // push node to queue if not found in set
+            if(got == seenActorNodes.end()){
+				childrenNode->parent = currActorNode;
+                actorQueue.push(childrenNode);
+            }
+        }
+
+    }
+
+
+
+
+}
+
+/*Helper function to retrieve the actor's node using the key (actor name)*/
+ActorNode* ActorGraph::getActorNode(string actorName){
+    // get starting actor node using startactor
+    unordered_map<string, ActorNode*>::iterator node = actorNode_map.find(actorName);
+    // first actor node 
+    ActorNode* actor_node = node->second;
+    // return node
+    return actor_node;
+
+}
+
+/* 
+	Function prints the path of the breadth first search using the 
+	nodes parent node. Traverse the parent nodes until the parent pointer
+	is null;
+*/
+void ActorGraph::printPath(ActorNode* lastActorNode){
+
+	cout << "Printing the path of the breadth first search......." << endl;
+	ActorNode *curr = lastActorNode;
+	while (!curr){	
+		cout << curr->actorName << "\t";
+		curr = curr->parent;
+	}
+
+}
+
+bool ActorGraph::getActorPairs(const char* in_filename){
+	// Initialize the file stream
+	ifstream infile(in_filename);
+
+	bool have_header = false;
+
+	// keep reading lines until the end of file is reached
+	while (infile) {
+		string s;
+
+		// get the next line
+		if (!getline(infile, s)) break;
+		if (!have_header) {
+			// skip the header
+			have_header = true;
+			continue;
+		}
+
+		istringstream ss(s);
+		vector <string> record;
+
+		while (ss) {
+			string next;
+
+			// get the next string before hitting a tab character and put it in 'next'
+			if (!getline(ss, next, '\t')) break;
+
+			record.push_back(next);
+		}
+
+		if (record.size() != 3) {
+			// we should have exactly 3 columns
+			continue;
+		}
+
+		string actor_1(record[0]);
+		string actor_2(record[1]);
+
+		// Call breadth first search using two actors 
+		BFSearch(actorNode_map, actor_1, actor_2);
+			
+	}
+
+	if (!infile.eof()) {
+		cerr << "Failed to read " << in_filename << "!\n";
+		return false;
+	}
+	infile.close();
+
+	return true;	
 }

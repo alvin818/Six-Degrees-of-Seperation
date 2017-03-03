@@ -16,5 +16,6 @@ using namespace std;
 
 ActorNode::ActorNode(string name){
 	actorName = name;
+	parent = NULL;
 }
 

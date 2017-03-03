@@ -29,6 +29,8 @@ public:
 	
 	// ajancency list of edges (movies) 
 	unordered_set<ActorEdge*> movieEdges;
+
+	ActorNode* parent;
 	
 	// initialize node with actor name
 	ActorNode(string name);
