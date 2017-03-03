@@ -55,7 +55,11 @@ int main(int argc, char *argv[]){
 
   }
 
-  actor_graph.BFSearch(map, );
+  const char* pairFiles = argv[3];
+
+  if (!actor_graph.getActorPairs(pairFiles)){
+	  return -1;  
+  }
 
 	/* now use argv[3]: test_pairs.tsv argv[4]: out_paths_unweighted 
        to do breadth first search
