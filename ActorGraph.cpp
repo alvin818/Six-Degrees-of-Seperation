@@ -66,8 +66,11 @@ bool ActorGraph::loadFromFile(const char* in_filename, bool use_weighted_edges) 
 		string movie_title(record[1]);
 		int movie_year = stoi(record[2]);
 
+    actor_name = ("(" + actor_name + ")");
+  
+
 		// Combine movie title and year into string variable
-		string movieKey = (movie_title + "#@" + to_string(movie_year));
+		string movieKey = ("[" + movie_title + "#@" + to_string(movie_year) + "]");
 
 		/*  Create movie class objects with given values
 			Use Movie title + year as key for unordered_map
@@ -277,11 +280,11 @@ void ActorGraph::printPath(unordered_map<string, string> edgeMap, ActorNode* las
 		unordered_map<string, string>::iterator got = edgeMap.find(curr->actorName);
 		if (got != edgeMap.end()){
 			//cout << got->second <<"\t";
-			outfile << "(" << got->first << ")" << "--";
-			outfile << "[" << got->second << "]" << "-->";
+			outfile << got->first << "--";
+			outfile << got->second << "-->";
 		}
 		else{
-			outfile << "[" << curr->actorName << "]";
+			outfile << curr->actorName;
 		}
 		curr = curr->parent;
 
@@ -332,6 +335,10 @@ bool ActorGraph::getActorPairs(const char* in_filename, ofstream& out_filename){
 		string actor_1(record[0]);
 		string actor_2(record[1]);
 
+    actor_1 = ("(" + actor_1 + ")");
+    actor_2 = ("(" + actor_2 + ")");
+
+
 		cout << "Pair to find: " << actor_1 << "\t" << actor_2 << endl;
 		// Call breadth first search using two actors 
 		BFSearch(actorNode_map, actor_2, actor_1, out_filename);
@@ -343,6 +350,10 @@ bool ActorGraph::getActorPairs(const char* in_filename, ofstream& out_filename){
 		return false;
 	}
 	infile.close();
+  
+  cout << "#nodes: " << actorNode_map.size() << endl;
+  cout << "#movies: " << movies_map.size() << endl;
+
 
 	return true;
 }
