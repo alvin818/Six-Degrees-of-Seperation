@@ -1,7 +1,8 @@
 /* 
+   File: ActorEdge.cpp
    Name: Alvin Vanegas
    Date: 2/25/17
-   Overview:
+   Overview: Bascially the constructor for an actorEdge object
 */
 
 #include <iostream>
@@ -9,9 +10,14 @@
 #include <vector>
 #include <utility>
 #include "ActorEdge.h"
-using namespace std;
+   using namespace std;
 
-ActorEdge::ActorEdge(string movie, string name){	
-	movieInfo = movie;
-	coStarName = name;
-}
+/*
+	Constructor for ActorEdges objects
+*/
+	ActorEdge::ActorEdge(string movie, string name){	
+	// Movie name + year
+		movieInfo = movie;
+	// Name of actor 
+		coStarName = name;
+	}

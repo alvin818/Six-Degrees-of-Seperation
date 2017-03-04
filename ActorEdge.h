@@ -1,7 +1,9 @@
 /* 
+   File: ActorEdge.h
    Name: Alvin Vanegas
    Date: 2/25/17
-   Overview:
+   Overview: This class represents the edges in the graph. Each edge contains the 
+   movie info and the name of the costar
 */
 #ifndef ACTOREDGE_H
 #define ACTOREDGE_H
@@ -10,20 +12,20 @@
 #include <iostream>
 #include <string>
 #include <vector>
-using namespace std;
+   using namespace std;
 
-class ActorEdge {
+   class ActorEdge {
 
-public:
+   public:
 
 	/* 
 	   Edge will contain a pair: 
 	   movie (name + year) & name of costar 
 	*/
-	string movieInfo;
+	   string movieInfo;
 	// name of co-star in film
-	string coStarName;
+	   string coStarName;
 
-	ActorEdge(string movie, string name);
-};
+	   ActorEdge(string movie, string name);
+	};
 #endif
