@@ -383,6 +383,8 @@ bool ActorGraph::getActorPairs(const char* in_filename, ofstream& out_filename, 
    with the smallest weight.
    */
 void ActorGraph::dijkstraSearch(string startActor, string actorToFind, ofstream& outFile){
+  
+	bool searchFinished = false;
 
   // create priority queue
   priority_queue<ActorNode*, vector<ActorNode*>, ActorNodePtrComp> actor_pq;
@@ -410,74 +412,60 @@ void ActorGraph::dijkstraSearch(string startActor, string actorToFind, ofstream&
 
     // pop the top element
     actor_pq.pop();
-    
-    // once you pop actor reset nodes
-
-
+        
     // sanity print statement to check if pq is working
     //cout << "Actor node: " << currActorNode->actorName << " with distance: " << currActorNode->distance << " popped off the pq" << endl;
 
-    //seenActorNodes.insert(currActorNode->actorName);
+	// Add to set, use to reset nodes for next search
+    seenActorNodes.insert(currActorNode->actorName);
 
-    unordered_set<string>::iterator seen_actor = seenActorNodes.find(currActorNode->actorName);
+	if (!searchFinished){
+		//unordered_set<string>::iterator seen_actor = seenActorNodes.find(currActorNode->actorName);   
+
+		// node has been pooped off, set done to true
+		if (!currActorNode->done){
+			currActorNode->done = true;
+
+			// Now check if current node is the node being searched for
+			if (currActorNode->actorName == actorToFind){
+				// print path function.
+				cout << "Smallest weighted path to actor found!" << endl;
+				printWeightedPath(currActorNode, outFile);
+				// pop rest of queue and add to set to have them reset for next search
+				searchFinished = true;
+				// reset the nodes popped
+
+			}
+
+			// iterate thru the nodes edges and add connected actor node to queue
+			auto edge = currActorNode->movieEdges.begin();
+
+			// for each name in edge, get node and add to queue
+			for (; edge != currActorNode->movieEdges.end(); ++edge){
+
+				// get actor node using name from edge list
+				ActorNode* childNode = getActorNode((*edge)->coStarName);
+
+				// Get total distance 
+				int edgeDistance = (*edge)->weight + currActorNode->distance;
+				// check if a smaller weight path has been found
+				if (childNode->distance > edgeDistance){
+
+					// update member variables of the node
+					childNode->parent = currActorNode;
+					childNode->distance = edgeDistance;
+
+					// Add node to pq
+					actor_pq.push(childNode);
+				}
+			}
+		}
+		cout << "Node has already been seen" << endl;	
+	}
     
-
-    // node has been pooped off, set done to true
-    if(seen_actor == seenActorNodes.end()){
-      //currActorNode->done = true;
-
-      //cout << "Actor: " << currActorNode->actorName << " was popped with distance: " << currActorNode->distance << endl;
-      // Now check if current node is the node being searched for
-      if (currActorNode->actorName == actorToFind){
-        // print path function.
-        cout << "Smallest weighted path to actor found!" << endl;
-        printWeightedPath(currActorNode, outFile);
-        // exit the function, no more need for searching 
-        return;
-      }
-
-      // iterate thru the nodes edges and add connected actor node to queue
-      auto edge = currActorNode->movieEdges.begin();
-      // for each name in edge, get node and add to queue
-      for (; edge != currActorNode->movieEdges.end(); ++edge){
-
-        // get actor node using name from edge list
-        ActorNode* childNode = getActorNode((*edge)->coStarName);
-
-        // See if node had been seen before
-        //unordered_set<string>::iterator got = seenActorNodes.find(childNode->actorName);
-
-        // push node to queue if it has not been pooped off the list
-        //if (got == seenActorNodes.end()){
-          // Create an edge pair with costar name and movie info
-          //pair<string, string> edgePair((*edge)->coStarName, (*edge)->movieInfo);
-          // insert into map
-          //seenActorEdges.insert(edgePair);
-          // Set parent to current node
-
-          // Get total distance 
-          int edgeDistance = (*edge)->weight + currActorNode->distance;
-          // check if a smaller weight path has been found
-          if (childNode->distance > edgeDistance){
-
-            // update member variables of the node
-            childNode->parent = currActorNode;
-            childNode->distance = edgeDistance;
-
-            // Add node to pq
-            actor_pq.push(childNode);
-          }
-        //}
-        seenActorNodes.insert(currActorNode->actorName);
-        //currActorNode->distance = INT_MAX;
-
-        //else{
-        //  cout << "Actor node: " << childNode->actorName << " has been popped off queue" << endl;
-        //}
-      }
-    }	   
-    cout << "Node has already been seen" << endl;
   }
+  // reset nodes
+  resetNodes(seenActorNodes);
 
   cout << "Shit, program shouldn't reach this point.... FML" << endl;
 
@@ -489,11 +477,25 @@ void ActorGraph::printWeightedPath(ActorNode* lastActorNode, ofstream& out_file)
   ActorNode* currNode = lastActorNode;
   cout << "Total weight of path: " << currNode->distance << endl;
   // reset distance
-  currNode->distance = INT_MAX;
+  //currNode->distance = INT_MAX;
   while (currNode){
     
     cout << currNode->actorName << " --> ";
     currNode = currNode->parent;
   }
   cout << endl;
+}
+
+
+void ActorGraph::resetNodes(unordered_set<string> visitedNodes){
+
+	// Get each nodes and reset values
+	for (auto node = visitedNodes.begin(); node != visitedNodes.end(); node++){
+		ActorNode* currNode = getActorNode(*node);
+		currNode->distance = INT_MAX;
+		currNode->parent = nullptr;
+		currNode->done = false;
+	}
+	cout << "Actor nodes have been reset" << endl;
+	
 }

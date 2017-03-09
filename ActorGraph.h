@@ -74,6 +74,8 @@ public:
 
 	void printWeightedPath(ActorNode*, ofstream&);
 
+	void resetNodes(unordered_set<string>);
+
     /** You can modify this method definition as you wish
      *
      * Load the graph from a tab-delimited file of actor->movie relationships.
