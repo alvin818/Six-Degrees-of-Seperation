@@ -77,8 +77,8 @@ bool ActorGraph::loadFromFile(const char* in_filename, bool use_weighted_edges) 
         Use Movie title + year as key for unordered_map
         Put the movie object as value
         Use key to make sure movie object has not been made
-exmaple: "Memento#@2000" would be key for this movie object
-*/
+		exmaple: "Memento#@2000" would be key for this movie object
+	*/
 
     // First check if movie object has not been made already to avoid repeat movie objects
     unordered_map<string, Movie*>::const_iterator got = movies_map.find(movieKey);
@@ -384,7 +384,10 @@ bool ActorGraph::getActorPairs(const char* in_filename, ofstream& out_filename, 
    */
 void ActorGraph::dijkstraSearch(string startActor, string actorToFind, ofstream& outFile){
   
-	bool searchFinished = false;
+  // reset the nodes
+  resetNodes(seenActorNodes);
+
+  bool searchFinished = false;
 
   // create priority queue
   priority_queue<ActorNode*, vector<ActorNode*>, ActorNodePtrComp> actor_pq;
@@ -401,7 +404,7 @@ void ActorGraph::dijkstraSearch(string startActor, string actorToFind, ofstream&
   actor_pq.push(currActorNode);
 
   // have a set containing actor nodes that have been popped from the queue
-  unordered_set<string> seenActorNodes;
+  //unordered_set<string> seenActorNodes;
 
   unordered_map<string, string> actorMoviePair;
   //seenActorNodes.insert(currActorNode->actorName);
@@ -458,20 +461,20 @@ void ActorGraph::dijkstraSearch(string startActor, string actorToFind, ofstream&
 					// Add node to pq
 					actor_pq.push(childNode);
           
-          // insert edge into edge map
-          actorMoviePair[childNode->actorName] = (*edge)->movieInfo; 
+					// insert edge into edge map
+					actorMoviePair[childNode->actorName] = (*edge)->movieInfo; 
         
 				}
 			}
 		}
 	}
     
-  }
-  // reset nodes
-  resetNodes(seenActorNodes);
+  }  
 }
 
-
+/* 
+	This function will print the weighted path to the output file
+*/
 void ActorGraph::printWeightedPath(unordered_map<string, string> edgePairMap, ActorNode* lastActorNode, ofstream& out_file){
 
   ActorNode* currNode = lastActorNode;

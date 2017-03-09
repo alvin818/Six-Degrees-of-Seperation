@@ -46,6 +46,9 @@ public:
 	// Holds movie objects and use movie info as key
     unordered_map<string, Movie*> movies_map;
 
+	// Holds set of visited actorNodes
+	unordered_set<string> seenActorNodes;
+
 public:
     ActorGraph(void);
 
