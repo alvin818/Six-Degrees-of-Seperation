@@ -420,57 +420,50 @@ void ActorGraph::dijkstraSearch(unordered_map<string, ActorNode*> actor_map, str
 		// node has been pooped off, set done to true
     if(!currActorNode->done){
 		  currActorNode->done = true;
-    }
 
-    cout << "Actor: " << currActorNode->actorName << " was popped with distance: " << currActorNode->distance << endl; 
-		// Now check if current node is the node being searched for
-		if (currActorNode->actorName == actorToFind){
-			// print path function.
-      cout << "Smallest weighted path to actor found!" << endl;
-		  printWeightedPath(currActorNode, outFile);
-			// exit the function, no more need for searching 
-			return;
-		}
+		  cout << "Actor: " << currActorNode->actorName << " was popped with distance: " << currActorNode->distance << endl;
+		  // Now check if current node is the node being searched for
+		  if (currActorNode->actorName == actorToFind){
+			  // print path function.
+			  cout << "Smallest weighted path to actor found!" << endl;
+			  printWeightedPath(currActorNode, outFile);
+			  // exit the function, no more need for searching 
+			  return;
+		  }
 
-		// Add to set of seen actors once it has been popped
-		seenActorNodes.insert(currActorNode->actorName);
-		
+		  // iterate thru the nodes edges and add connected actor node to queue
+		  auto edge = currActorNode->movieEdges.begin();
+		  // for each name in edge, get node and add to queue
+		  for (; edge != currActorNode->movieEdges.end(); ++edge){
 
-		// iterate thru the nodes edges and add connected actor node to queue
-		auto edge = currActorNode->movieEdges.begin();
-		// for each name in edge, get node and add to queue
-		for (; edge != currActorNode->movieEdges.end(); ++edge){
-			
-			// get actor node using name from edge list
-			ActorNode* childNode = getActorNode((*edge)->coStarName);
+			  // get actor node using name from edge list
+			  ActorNode* childNode = getActorNode((*edge)->coStarName);
 
-			// See if node had been seen before
-			unordered_set<string>::iterator got = seenActorNodes.find(childNode->actorName);
+			  // See if node had been seen before
+			  unordered_set<string>::iterator got = seenActorNodes.find(childNode->actorName);
 
-			// push node to queue if it has not been pooped off the list
-			if (got == seenActorNodes.end()){
-				// Create an edge pair with costar name and movie info
-				//pair<string, string> edgePair((*edge)->coStarName, (*edge)->movieInfo);
-				// insert into map
-				//seenActorEdges.insert(edgePair);
-				// Set parent to current node
+			  // push node to queue if it has not been pooped off the list
+			  if (got == seenActorNodes.end()){
+				  // Create an edge pair with costar name and movie info
+				  //pair<string, string> edgePair((*edge)->coStarName, (*edge)->movieInfo);
+				  // insert into map
+				  //seenActorEdges.insert(edgePair);
+				  // Set parent to current node
 
-				// update member variables of the node
-				childNode->parent = currActorNode;
-				int edgeDistance = (*edge)->weight;
-				childNode->distance = edgeDistance + currActorNode->distance;
+				  // update member variables of the node
+				  childNode->parent = currActorNode;
+				  int edgeDistance = (*edge)->weight;
+				  childNode->distance = edgeDistance + currActorNode->distance;
 
-				// Add node to pq
-				actor_pq.push(childNode);
-			}
-      //else{
-      //  cout << "Actor node: " << childNode->actorName << " has been popped off queue" << endl;
-      //}
-
-			
-		}
-
-	  cout << "size of queue: " << actor_pq.size() << endl; 
+				  // Add node to pq
+				  actor_pq.push(childNode);
+			  }
+			  //else{
+			  //  cout << "Actor node: " << childNode->actorName << " has been popped off queue" << endl;
+			  //}
+		  }
+		}	   
+	cout << "Node has already been seen" << endl;
 	}
 
   cout << "Shit, program shouldn't reach this point.... FML" << endl;
