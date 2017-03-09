@@ -21,12 +21,15 @@
 	class Movie{
 
 	public:
-	// name of film 
+		
+		// year of film, will be used for weighted edges
+		int movieYear;
+	// name of film + year
 		string movieName;
 	// will hold actors that have acted in the film
 		unordered_set<string> _actors;
 	// constructor
-		Movie(string name);
+		Movie(int year, string key);
 
 	};
 

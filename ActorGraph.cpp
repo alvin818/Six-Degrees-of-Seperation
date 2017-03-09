@@ -66,25 +66,26 @@ bool ActorGraph::loadFromFile(const char* in_filename, bool use_weighted_edges) 
 		string movie_title(record[1]);
 		int movie_year = stoi(record[2]);
 
-    actor_name = ("(" + actor_name + ")");
+   		actor_name = ("(" + actor_name + ")");
   
 
 		// Combine movie title and year into string variable
 		string movieKey = ("[" + movie_title + "#@" + to_string(movie_year) + "]");
 
-		/*  Create movie class objects with given values
+		/*  
+			Create movie class objects with given values
 			Use Movie title + year as key for unordered_map
 			Put the movie object as value
 			Use key to make sure movie object has not been made
 			exmaple: "Memento#@2000" would be key for this movie object
-			*/
+		*/
 
 		// First check if movie object has not been made already to avoid repeat movie objects
 		unordered_map<string, Movie*>::const_iterator got = movies_map.find(movieKey);
 
 		// If key is not found then create new movie object and add it to map
 		if (got == movies_map.end()){
-			Movie *newMovie = new Movie(movieKey);
+			Movie *newMovie = new Movie(movie_year, movieKey);
 			newMovie->_actors.insert(actor_name);
 
 			// Make a pair with movie name and movie object
@@ -135,6 +136,7 @@ unordered_map<string, ActorNode*> ActorGraph::createActorNodes(){
 
 		Movie *currMovieObj = it->second;
 		string movieName = it->first;
+		int movie_year = currMovieObj->movieYear;
 
 		// Get actor list from the movie object
 		unordered_set<string> currActorList = currMovieObj->_actors;
@@ -147,9 +149,13 @@ unordered_map<string, ActorNode*> ActorGraph::createActorNodes(){
 
 			// if node for actor does exist then create a new node
 			if (got == actorNode_map.end()){
+				
+				// Create new actor obj with actor name
 				ActorNode *newActor = new ActorNode(*actor);
-				//call create edges, pass in actor node and
-				newActor = createEdges(newActor, currActorList, movieName);
+
+				//call create edges, pass in actor node, list of actors, movie name + year
+				newActor = createEdges(newActor, currActorList, movieName, movie_year);
+
 				// Create pair: key(actor name) and new actor node
 				pair<string, ActorNode*> actorPair(*actor, newActor);
 				actorNode_map.insert(actorPair);
@@ -157,8 +163,9 @@ unordered_map<string, ActorNode*> ActorGraph::createActorNodes(){
 
 			// Node exists, simply update current actors node with edges
 			else{
+
 				ActorNode *existingActor = got->second;
-				existingActor = createEdges(existingActor, currActorList, movieName);
+				existingActor = createEdges(existingActor, currActorList, movieName, movie_year);
 				// Update the actor node already in map
 				got->second = existingActor;
 			}
@@ -166,19 +173,20 @@ unordered_map<string, ActorNode*> ActorGraph::createActorNodes(){
 
 
 	}
-	// return fully connected graph
+	// return fully connected graph w/ weighted edges
 	return actorNode_map;
 }
 
 /*
 	Helper function that created edges for the given actor node using the list from the movie object
 */
-ActorNode* ActorGraph::createEdges(ActorNode* node, unordered_set<string> actorList, string movieName){
+ActorNode* ActorGraph::createEdges(ActorNode* node, unordered_set<string> actorList, string movieName, int movie_year){
 
 	for (auto actor = actorList.begin(); actor != actorList.end(); actor++){
 		// create new edge object
 		if (*actor != node->actorName){
-			ActorEdge *newEdge = new ActorEdge(movieName, *actor);
+			int weight = 1  + (2015 - movie_year);
+			ActorEdge *newEdge = new ActorEdge(movieName, *actor, weight);
 			// Add new edge to actor node
 			node->movieEdges.insert(newEdge);
 		}
@@ -297,7 +305,7 @@ void ActorGraph::printPath(unordered_map<string, string> edgeMap, ActorNode* las
 /*	
 	Reads in pair file and seperates the pairs into two strings
 */
-bool ActorGraph::getActorPairs(const char* in_filename, ofstream& out_filename){
+bool ActorGraph::getActorPairs(const char* in_filename, ofstream& out_filename, bool weightedEdges){
 	// Initialize the file stream
 	ifstream infile(in_filename);
 
@@ -340,8 +348,18 @@ bool ActorGraph::getActorPairs(const char* in_filename, ofstream& out_filename){
 
 
 		cout << "Pair to find: " << actor_1 << "\t" << actor_2 << endl;
-		// Call breadth first search using two actors 
-		BFSearch(actorNode_map, actor_2, actor_1, out_filename);
+		/*
+			Have conditional statement to do BFS 
+		*/
+
+		// use dijstrkaskdfjskadf algorithm
+		if (weightedEdges){
+		
+		}
+		else{
+			BFSearch(actorNode_map, actor_2, actor_1, out_filename);
+		}
+		
 
 	}
 
@@ -356,4 +374,101 @@ bool ActorGraph::getActorPairs(const char* in_filename, ofstream& out_filename){
 
 
 	return true;
+}
+
+
+/*
+	Implements dijkstra's algorithm using a priority queue to find the path between two actors 
+	with the smallest weight.
+*/
+void ActorGraph::dijkstraSearch(unordered_map<string, ActorNode*> actor_map, string startActor, string actorToFind, ofstream& outFile){
+
+	// create priority queue
+	priority_queue<ActorNode*, vector<ActorNode*>, ActorNodePtrComp> actor_pq;
+
+	// Get first actor
+	ActorNode *currActorNode = getActorNode(startActor);
+
+	// set distance to zero for first node
+	currActorNode->distance = 0;
+
+	// push first actor into pg
+	actor_pq.push(currActorNode);
+
+	// have a set containing actor nodes that have been popped from the queue
+	unordered_set<ActorNode*> seenActorNodes;
+
+	//seenActorNodes.insert(currActorNode);
+	
+	while (!actor_pq.empty()){
+	
+		// get the front element from the pq
+		currActorNode = actor_pq.top();
+
+		// pop the top element
+		actor_pq.pop();
+
+		// node has been pooped off, set done to true
+		currActorNode->done = true;
+
+		// Now check if current node is the node being searched for
+		if (currActorNode->actorName == actorToFind){
+			// print path function.
+			printWeightedPath(currActorNode, outFile);
+			// exit the function, no more need for searching 
+			return;
+		}
+
+		// Add to set of seen actors once it has been popped
+		//seenActorNodes.insert(currActorNode);
+		
+
+		// iterate thru the nodes edges and add connected actor node to queue
+		auto edge = currActorNode->movieEdges.begin();
+		// for each name in edge, get node and add to queue
+		for (; edge != currActorNode->movieEdges.end(); ++edge){
+			
+			// get actor node using name from edge list
+			ActorNode* childNode = getActorNode((*edge)->coStarName);
+
+			// See if node had been seen before
+			//unordered_set<ActorNode*>::iterator got = seenActorNodes.find(childNode);
+
+			// push node to queue if it has not been pooped off the list
+			if (!(childNode->done)){
+				// Create an edge pair with costar name and movie info
+				//pair<string, string> edgePair((*edge)->coStarName, (*edge)->movieInfo);
+				// insert into map
+				//seenActorEdges.insert(edgePair);
+				// Set parent to current node
+
+				// update member variables of the node
+				childNode->parent = currActorNode;
+				int edgeDistance = (*edge)->weight;
+				childNode->distance = edgeDistance + currActorNode->distance;
+
+				// Add node to pq
+				actor_pq.push(childNode);
+			}		
+
+			
+		}
+
+	
+	}
+
+}
+
+
+void ActorGraph::printWeightedPath(ActorNode* lastActorNode, ofstream& out_file){
+	
+	ActorNode* currNode = lastActorNode;
+
+	while (currNode){
+		
+		cout << currNode->actorName << "\t";
+		cout << "Distance of node: " << currNode->distance;
+		currNode = currNode->parent;
+	}
+
 }

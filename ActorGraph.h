@@ -20,6 +20,21 @@
 
  using namespace std;
 
+
+/** A 'function class' for use as the Compare class in a
+ *  priority_queue<ActorNode*>.
+ *  For this to work, operator< must be defined to
+ *  do the right thing on HCNodes.
+ */
+
+ class ActorNodePtrComp {
+public:
+    bool operator()(ActorNode*& lhs, ActorNode*& rhs) const {
+        return *lhs < *rhs;
+    }
+};
+
+
  class ActorGraph {
  protected:
   
@@ -39,7 +54,7 @@ public:
     unordered_map<string, ActorNode*> createActorNodes();
     
 	// Creates edges for each ActorNode and fully connects the graph
-    ActorNode* createEdges(ActorNode*, unordered_set<string>, string);
+    ActorNode* createEdges(ActorNode*, unordered_set<string>, string, int);
 
 	// Performs breadth first search starting from one string value to another
     void BFSearch(unordered_map<string, ActorNode*>, string, string, ofstream&);
@@ -51,7 +66,13 @@ public:
     void printPath(unordered_map<string, string>, ActorNode*, ofstream&);
     
 	// gets each set of pairs and calls BFS function
-    bool getActorPairs(const char* in_filename, ofstream& );
+    bool getActorPairs(const char* in_filename, ofstream&, bool use_weighted_edges);
+
+
+    // method wil perform breadth first search using dijkstra's algorithm
+    void dijkstraSearch(unordered_map<string, ActorNode*>, string, string, ofstream&);
+
+	void printWeightedPath(ActorNode*, ofstream&);
 
     /** You can modify this method definition as you wish
      *

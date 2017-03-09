@@ -26,6 +26,11 @@
 	// name of co-star in film
 	   string coStarName;
 
-	   ActorEdge(string movie, string name);
+	// Weight of the edge
+	   int weight;
+
+
+	   ActorEdge(string movie, string name, int weight);
 	};
+
 #endif

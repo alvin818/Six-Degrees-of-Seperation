@@ -15,6 +15,9 @@
 
 /*Constructor*/
 
- Movie::Movie(string name){
+ Movie::Movie(int year, string name){
+ 	
+ 	movieYear = year;
+ 	
  	movieName = name;
  }

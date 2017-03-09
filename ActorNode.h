@@ -31,11 +31,19 @@
    	
 	// ajancency list of edges (movies) 
    	unordered_set<ActorEdge*> movieEdges;
-
+   // pointer to the previous node
    	ActorNode* parent;
+   // distance from the starting node
+    int distance;
    	
+	// boolean used to see if node has been pooped off the pq
+	bool done;
+
 	// initialize node with actor name
    	ActorNode(string name);
+
+
+      bool operator<(const ActorNode& other);
    };
 
 #endif

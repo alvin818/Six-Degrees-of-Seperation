@@ -15,9 +15,11 @@
 /*
 	Constructor for ActorEdges objects
 */
-	ActorEdge::ActorEdge(string movie, string name){	
+	ActorEdge::ActorEdge(string movie, string name, int _weight){	
 	// Movie name + year
 		movieInfo = movie;
 	// Name of actor 
 		coStarName = name;
+	// weight of edge
+		weight = _weight;
 	}

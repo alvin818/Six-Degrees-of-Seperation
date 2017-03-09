@@ -34,9 +34,11 @@
     // get input file
     const char* in_filename = argv[1];
 
-  //if(argv[2] == 'w'){
-    //weightedEdges = true;
-  //}
+	char *inputChar = argv[2];
+
+	if(*inputChar == 'w'){
+		weightedEdges = true;
+	}
 
 	// call ActorGraph on movie_cast
     if(!actor_graph.loadFromFile( in_filename, weightedEdges)){
@@ -62,7 +64,7 @@
     outFile << "(actor)--[movie#@year]-->(actor)--..." << endl;
 
   // Enterting breadth first search 
-    if (!actor_graph.getActorPairs(pairFiles, outFile)){
+    if (!actor_graph.getActorPairs(pairFiles, outFile, weightedEdges)){
      cout << "Loading in pairs failed..... exiting...." << endl;
      return -1;  
    }
