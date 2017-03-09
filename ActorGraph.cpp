@@ -430,7 +430,6 @@ void ActorGraph::dijkstraSearch(string startActor, string actorToFind, ofstream&
 			// Now check if current node is the node being searched for
 			if (currActorNode->actorName == actorToFind){
 				// print path function.
-				cout << "Smallest weighted path to actor found!" << endl;
 				printWeightedPath(actorMoviePair, currActorNode, outFile);
 				// pop rest of queue and add to set to have them reset for next search
 				searchFinished = true;
@@ -458,12 +457,10 @@ void ActorGraph::dijkstraSearch(string startActor, string actorToFind, ofstream&
           
 					// Add node to pq
 					actor_pq.push(childNode);
-
-          // create movie pair with actor and edge
-          pair<string, string> edgePair(childNode->actorName, (*edge)->movieInfo);
-          // add it to map
-          actorMoviePair.insert(edgePair);         
-
+          
+          // insert edge into edge map
+          actorMoviePair[childNode->actorName] = (*edge)->movieInfo; 
+        
 				}
 			}
 		}
@@ -479,35 +476,26 @@ void ActorGraph::printWeightedPath(unordered_map<string, string> edgePairMap, Ac
 
   ActorNode* currNode = lastActorNode;
   cout << "Total weight of path: " << currNode->distance << endl;
-  // reset distance
-  //currNode->distance = INT_MAX;
+  
   while(currNode){
     unordered_map<string, string>::iterator got = edgePairMap.find(currNode->actorName);
     if(got != edgePairMap.end()){
-      cout << got->first << "--" << got->second << "-->";   
+      out_file << got->first << "--" << got->second << "-->";   
     }
     else{
-      cout << currNode->actorName;
+      out_file << currNode->actorName;
     }
     
     currNode = currNode->parent; 
   }
 
-/*
-  while (currNode){
-    if(currNode->parent){
-      cout << currNode->actorName << " --> ";
-    }
-    else{
-      cout << currNode->actorName;
-    } 
-    currNode = currNode->parent;
-  }
-  */
-  cout << endl;
+  out_file << endl;
 }
 
-
+/*
+ *  This function resets all the nodes visited for the next pair search
+ *  
+ */
 void ActorGraph::resetNodes(unordered_set<string> visitedNodes){
 
 	// Get each nodes and reset values
