@@ -204,7 +204,8 @@ ActorNode* ActorGraph::createEdges(ActorNode* node, unordered_set<string> actorL
 */
 void ActorGraph::BFSearch(unordered_map<string, ActorNode*> actor_map, string startActor, string actorToFind, ofstream& outFile){
 
-	// get node using actors name
+	cout << "Entering unweighted graph search..... " << endl;
+  // get node using actors name
 	ActorNode* currActorNode = getActorNode(startActor);
 	// Make parent ptr of first node null
 	currActorNode->parent = nullptr;
@@ -251,7 +252,8 @@ void ActorGraph::BFSearch(unordered_map<string, ActorNode*> actor_map, string st
 			if (childrenNode->actorName == actorToFind){
 				// print path function.
 				printPath(seenActorEdges, childrenNode, outFile);
-				// exit the function, no more need for searching 
+				// exit the function, no more need for searching
+        cout << "done" << endl;
 				return;
 			}
 		}
@@ -354,7 +356,7 @@ bool ActorGraph::getActorPairs(const char* in_filename, ofstream& out_filename, 
 
 		// use dijstrkaskdfjskadf algorithm
 		if (weightedEdges){
-		
+      dijkstraSearch(actorNode_map, actor_2, actor_1, out_filename); 
 		}
 		else{
 			BFSearch(actorNode_map, actor_2, actor_1, out_filename);
@@ -391,14 +393,16 @@ void ActorGraph::dijkstraSearch(unordered_map<string, ActorNode*> actor_map, str
 
 	// set distance to zero for first node
 	currActorNode->distance = 0;
+  
+  currActorNode->parent = NULL;
 
 	// push first actor into pg
 	actor_pq.push(currActorNode);
-
+  
 	// have a set containing actor nodes that have been popped from the queue
-	unordered_set<ActorNode*> seenActorNodes;
+	unordered_set<string> seenActorNodes;
 
-	//seenActorNodes.insert(currActorNode);
+	seenActorNodes.insert(currActorNode->actorName);
 	
 	while (!actor_pq.empty()){
 	
@@ -407,20 +411,29 @@ void ActorGraph::dijkstraSearch(unordered_map<string, ActorNode*> actor_map, str
 
 		// pop the top element
 		actor_pq.pop();
+    
+    // sanity print statement to check if pq is working
+    //cout << "Actor node: " << currActorNode->actorName << " with distance: " << currActorNode->distance << " popped off the pq" << endl;
+    
+    //seenActorNodes.insert(currActorNode->actorName);
 
 		// node has been pooped off, set done to true
-		currActorNode->done = true;
+    if(!currActorNode->done){
+		  currActorNode->done = true;
+    }
 
+    cout << "Actor: " << currActorNode->actorName << " was popped with distance: " << currActorNode->distance << endl; 
 		// Now check if current node is the node being searched for
 		if (currActorNode->actorName == actorToFind){
 			// print path function.
-			printWeightedPath(currActorNode, outFile);
+      cout << "Smallest weighted path to actor found!" << endl;
+		  printWeightedPath(currActorNode, outFile);
 			// exit the function, no more need for searching 
 			return;
 		}
 
 		// Add to set of seen actors once it has been popped
-		//seenActorNodes.insert(currActorNode);
+		seenActorNodes.insert(currActorNode->actorName);
 		
 
 		// iterate thru the nodes edges and add connected actor node to queue
@@ -432,10 +445,10 @@ void ActorGraph::dijkstraSearch(unordered_map<string, ActorNode*> actor_map, str
 			ActorNode* childNode = getActorNode((*edge)->coStarName);
 
 			// See if node had been seen before
-			//unordered_set<ActorNode*>::iterator got = seenActorNodes.find(childNode);
+			unordered_set<string>::iterator got = seenActorNodes.find(childNode->actorName);
 
 			// push node to queue if it has not been pooped off the list
-			if (!(childNode->done)){
+			if (got == seenActorNodes.end()){
 				// Create an edge pair with costar name and movie info
 				//pair<string, string> edgePair((*edge)->coStarName, (*edge)->movieInfo);
 				// insert into map
@@ -449,13 +462,18 @@ void ActorGraph::dijkstraSearch(unordered_map<string, ActorNode*> actor_map, str
 
 				// Add node to pq
 				actor_pq.push(childNode);
-			}		
+			}
+      //else{
+      //  cout << "Actor node: " << childNode->actorName << " has been popped off queue" << endl;
+      //}
 
 			
 		}
 
-	
+	  cout << "size of queue: " << actor_pq.size() << endl; 
 	}
+
+  cout << "Shit, program shouldn't reach this point.... FML" << endl;
 
 }
 
@@ -463,12 +481,11 @@ void ActorGraph::dijkstraSearch(unordered_map<string, ActorNode*> actor_map, str
 void ActorGraph::printWeightedPath(ActorNode* lastActorNode, ofstream& out_file){
 	
 	ActorNode* currNode = lastActorNode;
-
+  cout << "Total weight of path: " << currNode->distance << endl;
 	while (currNode){
 		
-		cout << currNode->actorName << "\t";
-		cout << "Distance of node: " << currNode->distance;
+		cout << currNode->actorName << " --> ";
 		currNode = currNode->parent;
 	}
-
+  cout << endl;
 }

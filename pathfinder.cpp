@@ -37,10 +37,11 @@
 	char *inputChar = argv[2];
 
 	if(*inputChar == 'w'){
+    cout << "Creating graph with weighted edges" << endl;
 		weightedEdges = true;
 	}
 
-	// call ActorGraph on movie_cast
+	  // call ActorGraph on movie_cast
     if(!actor_graph.loadFromFile( in_filename, weightedEdges)){
 		// return -1 if loadFromFile returns false
       return -1;
