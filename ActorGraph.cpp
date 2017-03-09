@@ -384,6 +384,8 @@ bool ActorGraph::getActorPairs(const char* in_filename, ofstream& out_filename, 
 	with the smallest weight.
 */
 void ActorGraph::dijkstraSearch(unordered_map<string, ActorNode*> actor_map, string startActor, string actorToFind, ofstream& outFile){
+  
+  
 
 	// create priority queue
 	priority_queue<ActorNode*, vector<ActorNode*>, ActorNodePtrComp> actor_pq;
@@ -416,9 +418,12 @@ void ActorGraph::dijkstraSearch(unordered_map<string, ActorNode*> actor_map, str
     //cout << "Actor node: " << currActorNode->actorName << " with distance: " << currActorNode->distance << " popped off the pq" << endl;
     
     //seenActorNodes.insert(currActorNode->actorName);
+    
+unordered_set<string>::iterator seen_actor = seenActorNodes.find(currActorNode->actorName);
+
 
 		// node has been pooped off, set done to true
-    if(!currActorNode->done){
+    if(seen_actor == seenActorNodes.end()){
 		  currActorNode->done = true;
 
 		  cout << "Actor: " << currActorNode->actorName << " was popped with distance: " << currActorNode->distance << endl;
@@ -458,6 +463,7 @@ void ActorGraph::dijkstraSearch(unordered_map<string, ActorNode*> actor_map, str
 				  // Add node to pq
 				  actor_pq.push(childNode);
 			  }
+        seenActorNodes.insert(currActorNode->actorName);
 			  //else{
 			  //  cout << "Actor node: " << childNode->actorName << " has been popped off queue" << endl;
 			  //}
