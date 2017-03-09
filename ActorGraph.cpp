@@ -403,6 +403,7 @@ void ActorGraph::dijkstraSearch(string startActor, string actorToFind, ofstream&
   // have a set containing actor nodes that have been popped from the queue
   unordered_set<string> seenActorNodes;
 
+  unordered_map<string, string> actorMoviePair;
   //seenActorNodes.insert(currActorNode->actorName);
 
   while (!actor_pq.empty()){
@@ -430,7 +431,7 @@ void ActorGraph::dijkstraSearch(string startActor, string actorToFind, ofstream&
 			if (currActorNode->actorName == actorToFind){
 				// print path function.
 				cout << "Smallest weighted path to actor found!" << endl;
-				printWeightedPath(currActorNode, outFile);
+				printWeightedPath(actorMoviePair, currActorNode, outFile);
 				// pop rest of queue and add to set to have them reset for next search
 				searchFinished = true;
 				// reset the nodes popped
@@ -454,35 +455,55 @@ void ActorGraph::dijkstraSearch(string startActor, string actorToFind, ofstream&
 					// update member variables of the node
 					childNode->parent = currActorNode;
 					childNode->distance = edgeDistance;
-
+          
 					// Add node to pq
 					actor_pq.push(childNode);
+
+          // create movie pair with actor and edge
+          pair<string, string> edgePair(childNode->actorName, (*edge)->movieInfo);
+          // add it to map
+          actorMoviePair.insert(edgePair);         
+
 				}
 			}
 		}
-		cout << "Node has already been seen" << endl;	
 	}
     
   }
   // reset nodes
   resetNodes(seenActorNodes);
-
-  cout << "Shit, program shouldn't reach this point.... FML" << endl;
-
 }
 
 
-void ActorGraph::printWeightedPath(ActorNode* lastActorNode, ofstream& out_file){
+void ActorGraph::printWeightedPath(unordered_map<string, string> edgePairMap, ActorNode* lastActorNode, ofstream& out_file){
 
   ActorNode* currNode = lastActorNode;
   cout << "Total weight of path: " << currNode->distance << endl;
   // reset distance
   //currNode->distance = INT_MAX;
-  while (currNode){
+  while(currNode){
+    unordered_map<string, string>::iterator got = edgePairMap.find(currNode->actorName);
+    if(got != edgePairMap.end()){
+      cout << got->first << "--" << got->second << "-->";   
+    }
+    else{
+      cout << currNode->actorName;
+    }
     
-    cout << currNode->actorName << " --> ";
+    currNode = currNode->parent; 
+  }
+
+/*
+  while (currNode){
+    if(currNode->parent){
+      cout << currNode->actorName << " --> ";
+    }
+    else{
+      cout << currNode->actorName;
+    } 
     currNode = currNode->parent;
   }
+  */
   cout << endl;
 }
 
@@ -496,6 +517,6 @@ void ActorGraph::resetNodes(unordered_set<string> visitedNodes){
 		currNode->parent = nullptr;
 		currNode->done = false;
 	}
-	cout << "Actor nodes have been reset" << endl;
+	//cout << "Actor nodes have been reset" << endl;
 	
 }

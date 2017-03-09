@@ -72,7 +72,7 @@ public:
     // method wil perform breadth first search using dijkstra's algorithm
     void dijkstraSearch(string, string, ofstream&);
 
-	void printWeightedPath(ActorNode*, ofstream&);
+	void printWeightedPath(unordered_map<string, string>, ActorNode*, ofstream&);
 
 	void resetNodes(unordered_set<string>);
 
