@@ -26,9 +26,9 @@
    bool ActorNode::operator<(ActorNode const & other){
   // if counts are different, just compare counts
   if(distance != other.distance)
-    return this->actorName > other.actorName;
+    return this->distance < other.distance;
 
   // Use symbol value to break ties
-  return this->distance < other.distance; 
+  return this->actorName < other.actorName; 
 }
 

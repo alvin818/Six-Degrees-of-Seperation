@@ -57,7 +57,7 @@ public:
     ActorNode* createEdges(ActorNode*, unordered_set<string>, string, int);
 
 	// Performs breadth first search starting from one string value to another
-    void BFSearch(unordered_map<string, ActorNode*>, string, string, ofstream&);
+    void BFSearch(string, string, ofstream&);
     
 	// Helper function that returns the actornode using the actor name
     ActorNode* getActorNode(string);
@@ -70,7 +70,7 @@ public:
 
 
     // method wil perform breadth first search using dijkstra's algorithm
-    void dijkstraSearch(unordered_map<string, ActorNode*>, string, string, ofstream&);
+    void dijkstraSearch(string, string, ofstream&);
 
 	void printWeightedPath(ActorNode*, ofstream&);
 
