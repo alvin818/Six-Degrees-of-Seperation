@@ -71,6 +71,12 @@ public:
 	// gets each set of pairs and calls BFS function
     bool getActorPairs(const char* in_filename, ofstream&, bool use_weighted_edges);
 
+    // Will get each pair being searched for and put into a vector
+    vector<pair<string, string>> getActorPairs(const char* actorPairs);
+
+    // Will get the oldest movie with it corresponding actor 
+    vector<pair<string, int>> findOldestFilmYear(vector<pair<string actor1, string actor2>>);
+
 
     // method wil perform breadth first search using dijkstra's algorithm
     void dijkstraSearch(string, string, ofstream&);

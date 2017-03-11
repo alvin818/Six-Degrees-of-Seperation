@@ -20,6 +20,7 @@
 #include "Movie.h"
 #include <queue>
 #include <climits>
+#include <utility> 
 using namespace std;
 
 ActorGraph::ActorGraph(void) {}
@@ -510,4 +511,138 @@ void ActorGraph::resetNodes(unordered_set<string> visitedNodes){
 	}
 	//cout << "Actor nodes have been reset" << endl;
 	
+}
+
+
+vector<pair<string, string>> ActorGraph::getActorPairs(const char* actorPairs){
+
+  // Vector to return
+  std::vector<pair<string, string>> pairs;
+
+  // Initialize the file stream
+  ifstream infile(in_filename);
+
+  bool have_header = false;
+
+  // keep reading lines until the end of file is reached
+  while (infile) {
+    string s;
+
+    // get the next line
+    if (!getline(infile, s)) break;
+    if (!have_header) {
+      // skip the header
+      have_header = true;
+      continue;
+    }
+
+    istringstream ss(s);
+    vector <string> record;
+
+    while (ss) {
+      string next;
+
+      // get the next string before hitting a tab character and put it in 'next'
+      if (!getline(ss, next, '\t')) break;
+
+      record.push_back(next);
+    }
+
+    if (record.size() != 2){
+      continue;
+    }
+
+
+    string actor_1(record[0]);
+    string actor_2(record[1]);
+
+    //actor_1 = ("(" + actor_1 + ")");
+    //actor_2 = ("(" + actor_2 + ")");
+
+
+    cout << "Pair to find: " << actor_1 << "\t" << actor_2 << endl;
+
+    // Add to vector
+    pairs.push_back(std::make_pair(actor_1,actor_2));
+
+    
+  if (!infile.eof()) {
+    cerr << "Failed to read " << in_filename << "!\n";
+    return;
+  }
+
+  infile.close();  
+
+  // return vector
+  return pairs;
+}
+
+/*
+  Will return the oldest movie year with its corresponding actor
+*/
+int ActorGraph::findOldestFilmYear(char *movie_casts, vector<string> actors){
+
+  int oldestMovieYear = INT_MAX;
+  // Initialize the file stream
+  ifstream infile(in_filename);
+
+  bool have_header = false;
+
+  // keep reading lines until the end of file is reached
+  while (infile) {
+    string s;
+
+    // get the next line
+    if (!getline(infile, s)) break;
+    if (!have_header) {
+      // skip the header
+      have_header = true;
+      continue;
+    }
+
+    istringstream ss(s);
+    vector <string> record;
+
+    while (ss) {
+      string next;
+
+      // get the next string before hitting a tab character and put it in 'next'
+      if (!getline(ss, next, '\t')) break;
+
+      record.push_back(next);
+    }
+
+    if (record.size() != 3) {
+      // we should have exactly 3 columns
+      continue;
+    }
+
+    string actor_name(record[0]);
+    string movie_title(record[1]);
+    int movie_year = stoi(record[2]);
+
+    // see if current actor read in is one being searched for
+    for(auto currActor = actors.begin(); currActor != actors.end(); currActor++){
+      // if the current actor name is one of the actors to search for
+      if(actor_name == currActor){ 
+        if(movie_year < oldestMovieYear){
+          oldestMovieYear = movie_year;
+        }
+      }
+
+    }
+  }
+
+  if (!infile.eof()) {
+    cerr << "Failed to read " << in_filename << "!\n";
+    return;
+  }
+
+
+
+  infile.close();
+
+  return oldestMovieYear;
+
+
 }
