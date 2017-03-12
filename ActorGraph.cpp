@@ -767,19 +767,41 @@ void ActorGraph::addMovieObjects(){
 	ADD SOME COMMENTS BRO
 */
 void ActorGraph::createGraph(int yearToPop){
-	
+  cout << "Creating graph with movies in year: " << yearToPop << endl;
 	Movie* currMovie = movieObjects.top();
 	unordered_map<string, Movie*> tempMovieMap;
-
+  int num = 0;
+  bool finished = false;
 	// pop all movies in given year then create temp graph
-	while (currMovie->movieYear == yearToPop){
+	while (!finished){
 		// pop movie obj from queue
 		currMovie = movieObjects.top();
-		movieObjects.pop();
-		tempMovieMap[currMovie->movieName] = currMovie;
+    if(currMovie->movieYear == yearToPop){
+      movieObjects.pop();
+      tempMovieMap[currMovie->movieName] = currMovie;
+    }
+    else{
+      finished = true;
+    }
+    //cout << "Movie popped from the queue: " << currMovie->movieName << endl;
+    num++;
 	}
-
+  
 	// now set movie_map to tempmap then create actornodes with it
 	movies_map = tempMovieMap;
+  cout << "movies popped from queue: " << endl;
+  
+  for(auto movie = movies_map.begin(); movie != movies_map.end(); movie++){
+    cout << movie->first << endl;  
+  }
+  
 	createActorNodes();
+  
+  cout << "Actor nodes created: " << endl;
+
+  for(auto actor = actorNode_map.begin(); actor != actorNode_map.end(); actor++){
+    cout << actor->first << endl;  
+  }
+
+
 }
