@@ -71,7 +71,7 @@ int main(int argc, char *argv[]){
 	/*
 		Now build graph using queue of movie objects
 	*/
-	actor_graph.createGraph();
+	//actor_graph.createGraph();
 
 
 

@@ -565,7 +565,7 @@ vector<pair<string, string>> ActorGraph::getActorPairs(const char* actorPairs){
 		// Add to vector
 		pairs.push_back(std::make_pair(actor_1, actor_2));
 
-
+}
 		if (!infile.eof()) {
 			cerr << "Failed to read " << actorPairs << "!\n";
 			return pairs;
@@ -575,7 +575,7 @@ vector<pair<string, string>> ActorGraph::getActorPairs(const char* actorPairs){
 
 		// return vector
 		return pairs;
-	}
+	
 }
 
 /*
@@ -725,7 +725,7 @@ void ActorGraph::createMovieObjects(const char* in_filename, int startYear){
 
   }
   else
-    cout << "Movie too old dawg..." << endl;
+    cout << "Movie too old dawg... " << movie_title << " " << movie_year  << endl;
     /*
        At this point the unordered_map of movie objects has been filled.
        Now create the actorNodes using this data.
@@ -755,7 +755,8 @@ void ActorGraph::addMovieObjects(){
   }
 
   cout << "Added movies to queue!" << endl;
-
+  Movie* firstMovie = movieObjects.top();
+  cout << "first movie in queue is: " << firstMovie->movieName << " " << firstMovie->movieYear << endl;
 }
 
 
