@@ -73,7 +73,7 @@ public:
     ActorNode* createEdges(ActorNode*, unordered_set<string>, string, int);
 
 	// Performs breadth first search starting from one string value to another
-    void BFSearch(string, string, ofstream&);
+    bool BFSearch(string, string, ofstream&);
     
 	// Helper function that returns the actornode using the actor name
     ActorNode* getActorNode(string);
@@ -101,7 +101,7 @@ public:
 
     void addMovieObjects();
 
-    void createGraph();
+    void createGraph(int startYear);
 
     /** You can modify this method definition as you wish
      *

@@ -34,6 +34,7 @@ int main(int argc, char *argv[]){
 	const char* movie_casts = argv[1];
 	const char* test_pairs = argv[2];
 	const char* out_file = argv[3];
+	ofstream outFile(out_file, ofstream::out);
 	string typeOfSearch = argv[4];
 
 	// Create instance of an actorGraph
@@ -44,6 +45,7 @@ int main(int argc, char *argv[]){
     
 
     vector<string> actorsToSearchfor;
+
     // Add actor pairs to new vector of strings
     for(auto onePair = pairsToSearchFor.begin(); onePair != pairsToSearchFor.end(); onePair++){
     	// push each element of pair to vector
@@ -71,7 +73,16 @@ int main(int argc, char *argv[]){
 	/*
 		Now build graph using queue of movie objects
 	*/
-	//actor_graph.createGraph();
+	
+	actor_graph.createGraph(yearToStart);
+
+
+	// BFS until all pairs have been found
+	for (auto onePair = pairsToSearchFor.begin(); onePair != pairsToSearchFor.end(); onePair++){
+		// push each element of pair to vector
+		actor_graph.BFSearch(get<1>(*onePair), get<0>(*onePair), outFile);
+		
+	}
 
 
 

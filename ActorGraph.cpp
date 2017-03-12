@@ -203,7 +203,7 @@ ActorNode* ActorGraph::createEdges(ActorNode* node, unordered_set<string> actorL
    Only actor nodes that have not been visited will be put into the queue to avoid repeat
    visits
    */
-void ActorGraph::BFSearch(string startActor, string actorToFind, ofstream& outFile){
+bool ActorGraph::BFSearch(string startActor, string actorToFind, ofstream& outFile){
 
   cout << "Entering unweighted graph search..... " << endl;
   // get node using actors name
@@ -255,12 +255,13 @@ void ActorGraph::BFSearch(string startActor, string actorToFind, ofstream& outFi
         printPath(seenActorEdges, childrenNode, outFile);
         // exit the function, no more need for searching
         cout << "done" << endl;
-        return;
+        return true;
       }
     }
 
   }
   cout << "LOL sorry connection you are searching for does not exist, try again buddy" << endl;
+  return false;
 }
 
 /*
@@ -359,7 +360,9 @@ bool ActorGraph::getActorPairs(const char* in_filename, ofstream& out_filename, 
       dijkstraSearch(actor_2, actor_1, out_filename); 
     }
     else{
-      BFSearch(actor_2, actor_1, out_filename);
+		if (!BFSearch(actor_2, actor_1, out_filename)){
+			cout << "No connection found between pairs....." << endl;
+		}
     }
 
 
@@ -760,3 +763,23 @@ void ActorGraph::addMovieObjects(){
 }
 
 
+/*
+	ADD SOME COMMENTS BRO
+*/
+void ActorGraph::createGraph(int yearToPop){
+	
+	Movie* currMovie = movieObjects.top();
+	unordered_map<string, Movie*> tempMovieMap;
+
+	// pop all movies in given year then create temp graph
+	while (currMovie->movieYear == yearToPop){
+		// pop movie obj from queue
+		currMovie = movieObjects.top();
+		movieObjects.pop();
+		tempMovieMap[currMovie->movieName] = currMovie;
+	}
+
+	// now set movie_map to tempmap then create actornodes with it
+	movies_map = tempMovieMap;
+	createActorNodes();
+}
