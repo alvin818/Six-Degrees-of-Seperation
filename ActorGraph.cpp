@@ -130,7 +130,7 @@ bool ActorGraph::loadFromFile(const char* in_filename, bool use_weighted_edges) 
    6. Reinsert the node into the has table/map
    */
 
-unordered_map<string, ActorNode*> ActorGraph::createActorNodes(){
+void ActorGraph::createActorNodes(){
 
   // For each movie object, do the following....
   for (auto it = movies_map.begin(); it != movies_map.end(); ++it){
@@ -175,7 +175,7 @@ unordered_map<string, ActorNode*> ActorGraph::createActorNodes(){
 
   }
   // return fully connected graph w/ weighted edges
-  return actorNode_map;
+  //return actorNode_map;
 }
 
 /*
@@ -516,71 +516,72 @@ void ActorGraph::resetNodes(unordered_set<string> visitedNodes){
 
 vector<pair<string, string>> ActorGraph::getActorPairs(const char* actorPairs){
 
-  // Vector to return
-  std::vector<pair<string, string>> pairs;
+	// Vector to return
+	std::vector<pair<string, string>> pairs;
 
-  // Initialize the file stream
-  ifstream infile(in_filename);
+	// Initialize the file stream
+	ifstream infile(actorPairs);
 
-  bool have_header = false;
+	bool have_header = false;
 
-  // keep reading lines until the end of file is reached
-  while (infile) {
-    string s;
+	// keep reading lines until the end of file is reached
+	while (infile) {
+		string s;
 
-    // get the next line
-    if (!getline(infile, s)) break;
-    if (!have_header) {
-      // skip the header
-      have_header = true;
-      continue;
-    }
+		// get the next line
+		if (!getline(infile, s)) break;
+		if (!have_header) {
+			// skip the header
+			have_header = true;
+			continue;
+		}
 
-    istringstream ss(s);
-    vector <string> record;
+		istringstream ss(s);
+		vector <string> record;
 
-    while (ss) {
-      string next;
+		while (ss) {
+			string next;
 
-      // get the next string before hitting a tab character and put it in 'next'
-      if (!getline(ss, next, '\t')) break;
+			// get the next string before hitting a tab character and put it in 'next'
+			if (!getline(ss, next, '\t')) break;
 
-      record.push_back(next);
-    }
+			record.push_back(next);
+		}
 
-    if (record.size() != 2){
-      continue;
-    }
-
-
-    string actor_1(record[0]);
-    string actor_2(record[1]);
-
-    //actor_1 = ("(" + actor_1 + ")");
-    //actor_2 = ("(" + actor_2 + ")");
+		if (record.size() != 2){
+			continue;
+		}
 
 
-    cout << "Pair to find: " << actor_1 << "\t" << actor_2 << endl;
+		string actor_1(record[0]);
+		string actor_2(record[1]);
 
-    // Add to vector
-    pairs.push_back(std::make_pair(actor_1,actor_2));
+		//actor_1 = ("(" + actor_1 + ")");
+		//actor_2 = ("(" + actor_2 + ")");
 
-    
-  if (!infile.eof()) {
-    cerr << "Failed to read " << in_filename << "!\n";
-    return;
-  }
 
-  infile.close();  
+		cout << "Pair to find: " << actor_1 << "\t" << actor_2 << endl;
 
-  // return vector
-  return pairs;
+		// Add to vector
+		pairs.push_back(std::make_pair(actor_1, actor_2));
+
+
+		if (!infile.eof()) {
+			cerr << "Failed to read " << actorPairs << "!\n";
+			return pairs;
+		}
+
+		infile.close();
+
+		// return vector
+		return pairs;
+	}
 }
 
 /*
   Will return the oldest movie year with its corresponding actor
 */
-int ActorGraph::findOldestFilmYear(char *movie_casts, vector<string> actors){
+int ActorGraph::findOldestFilmYear(const char *in_filename, vector<string> actors){
 
   int oldestMovieYear = INT_MAX;
   // Initialize the file stream
@@ -624,7 +625,7 @@ int ActorGraph::findOldestFilmYear(char *movie_casts, vector<string> actors){
     // see if current actor read in is one being searched for
     for(auto currActor = actors.begin(); currActor != actors.end(); currActor++){
       // if the current actor name is one of the actors to search for
-      if(actor_name == currActor){ 
+      if(actor_name == *currActor){ 
         if(movie_year < oldestMovieYear){
           oldestMovieYear = movie_year;
         }
@@ -635,7 +636,7 @@ int ActorGraph::findOldestFilmYear(char *movie_casts, vector<string> actors){
 
   if (!infile.eof()) {
     cerr << "Failed to read " << in_filename << "!\n";
-    return;
+    return -1;
   }
 
 
@@ -646,3 +647,115 @@ int ActorGraph::findOldestFilmYear(char *movie_casts, vector<string> actors){
 
 
 }
+
+/*
+	
+*/
+void ActorGraph::createMovieObjects(const char* in_filename, int startYear){
+  // Initialize the file stream
+  ifstream infile(in_filename);
+
+  bool have_header = false;
+
+  // keep reading lines until the end of file is reached
+  while (infile) {
+    string s;
+
+    // get the next line
+    if (!getline(infile, s)) break;
+    if (!have_header) {
+      // skip the header
+      have_header = true;
+      continue;
+    }
+
+    istringstream ss(s);
+    vector <string> record;
+
+    while (ss) {
+      string next;
+
+      // get the next string before hitting a tab character and put it in 'next'
+      if (!getline(ss, next, '\t')) break;
+
+      record.push_back(next);
+    }
+
+    if (record.size() != 3) {
+      // we should have exactly 3 columns
+      continue;
+    }
+
+    string actor_name(record[0]);
+    string movie_title(record[1]);
+    int movie_year = stoi(record[2]);
+
+    if(movie_year >= startYear){
+    // Combine movie title and year into string variable
+    string movieKey = ("[" + movie_title + "#@" + to_string(movie_year) + "]");
+
+    /*  
+        Create movie class objects with given values
+        Use Movie title + year as key for unordered_map
+        Put the movie object as value
+        Use key to make sure movie object has not been made
+    exmaple: "Memento#@2000" would be key for this movie object
+  */
+
+    // First check if movie object has not been made already to avoid repeat movie objects
+    unordered_map<string, Movie*>::const_iterator got = movies_map.find(movieKey);
+
+    // If key is not found then create new movie object and add it to map
+    if (got == movies_map.end()){
+      Movie *newMovie = new Movie(movie_year, movieKey);
+      newMovie->_actors.insert(actor_name);
+
+      // Make a pair with movie name and movie object
+      pair<string, Movie*> moviePair(movieKey, newMovie);
+
+      // insert the pair into the movie map
+      movies_map.insert(moviePair);
+    }
+
+    // Add actor to movie object returned by the iterator
+    else{
+      Movie *movieObject = got->second;
+      movieObject->_actors.insert(actor_name);
+    }
+
+  }
+  else
+    cout << "Movie too old dawg..." << endl;
+    /*
+       At this point the unordered_map of movie objects has been filled.
+       Now create the actorNodes using this data.
+       */
+
+  }
+
+  if (!infile.eof()) {
+    cerr << "Failed to read " << in_filename << "!\n";
+    return;
+  }
+
+  infile.close();
+  cout << endl;
+  //return true;
+}
+
+
+/*
+    ADD SOME COMMENTS DAWG
+*/
+void ActorGraph::addMovieObjects(){
+
+  // add movies to priority queue 
+  for(auto movie_it = movies_map.begin(); movie_it != movies_map.end(); movie_it++){
+    movieObjects.push(movie_it->second);
+  }
+
+  cout << "Added movies to queue!" << endl;
+
+}
+
+

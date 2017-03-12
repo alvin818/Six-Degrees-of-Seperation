@@ -11,7 +11,7 @@
 
 #include <iostream>
 #include "ActorGraph.h"
-   using namespace std;
+using namespace std;
 
  /* pathfinder will take in 3 parameters via command line
  	argv[1]: movie_casts.tsv
@@ -49,7 +49,7 @@
 
     cout << "Creating actor graph...... ";
   // map will have connected graph
-    unordered_map<string, ActorNode*> map = actor_graph.createActorNodes();
+    actor_graph.createActorNodes();
     cout << "DONE" << endl;
 
     cout << "Entering BFS....." << endl;

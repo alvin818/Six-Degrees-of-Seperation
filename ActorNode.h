@@ -43,7 +43,7 @@
    	ActorNode(string name);
 
 
-      bool operator<(const ActorNode& other);
+   bool operator<(const ActorNode& other);
    };
 
 #endif

@@ -30,6 +30,8 @@
 		unordered_set<string> _actors;
 	// constructor
 		Movie(int year, string key);
+	// need for priority queue of movie objects
+		bool operator<(const Movie& other);
 
 	};
 

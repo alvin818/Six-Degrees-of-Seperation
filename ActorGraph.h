@@ -16,6 +16,7 @@
 #include "Movie.h"
 #include <unordered_map>
 #include <unordered_set>
+#include <queue>
 // Maybe include some data structures here
 
  using namespace std;
@@ -35,6 +36,13 @@ public:
 };
 
 
+class MoviePtrComp {
+public:
+    bool operator()(Movie*& lhs, Movie*& rhs) const {
+        return *lhs < *rhs;
+    }
+};
+
  class ActorGraph {
  protected:
   
@@ -49,12 +57,17 @@ public:
 	// Holds set of visited actorNodes
 	unordered_set<string> seenActorNodes;
 
+    // will hold movie objects for actor connections
+    priority_queue<Movie*, vector<Movie*>, MoviePtrComp> movieObjects;
+
+
+
 public:
     ActorGraph(void);
 
     
 	// Creates ActorNodes
-    unordered_map<string, ActorNode*> createActorNodes();
+    void createActorNodes();
     
 	// Creates edges for each ActorNode and fully connects the graph
     ActorNode* createEdges(ActorNode*, unordered_set<string>, string, int);
@@ -75,8 +88,9 @@ public:
     vector<pair<string, string>> getActorPairs(const char* actorPairs);
 
     // Will get the oldest movie with it corresponding actor 
-    vector<pair<string, int>> findOldestFilmYear(vector<pair<string actor1, string actor2>>);
+    int findOldestFilmYear(const char* movie_casts, vector<string> actors);
 
+    void createMovieObjects(const char* movie_casts, int startingYear);
 
     // method wil perform breadth first search using dijkstra's algorithm
     void dijkstraSearch(string, string, ofstream&);
@@ -84,6 +98,10 @@ public:
 	void printWeightedPath(unordered_map<string, string>, ActorNode*, ofstream&);
 
 	void resetNodes(unordered_set<string>);
+
+    void addMovieObjects();
+
+    void createGraph();
 
     /** You can modify this method definition as you wish
      *
