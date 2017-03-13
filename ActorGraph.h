@@ -60,6 +60,8 @@ public:
     // will hold movie objects for actor connections
     priority_queue<Movie*, vector<Movie*>, MoviePtrComp> movieObjects;
 
+	unordered_map<string, vector<pair<string, string>>> pairsAndYear;
+
 
 
 public:
@@ -102,6 +104,8 @@ public:
     void addMovieObjects();
 
     void createGraph(int startYear);
+
+
 
     /** You can modify this method definition as you wish
      *
