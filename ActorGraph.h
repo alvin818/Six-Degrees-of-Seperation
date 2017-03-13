@@ -84,7 +84,7 @@ public:
     bool getActorPairs(const char* in_filename, ofstream&, bool use_weighted_edges);
 
     // Will get each pair being searched for and put into a vector
-    vector<pair<string, string>> getActorPairs(const char* actorPairs);
+    unordered_map<string, pair<string, string>> getActorPairs(const char* actorPairs);
 
     // Will get the oldest movie with it corresponding actor 
     int findOldestFilmYear(const char* movie_casts, vector<string> actors);
@@ -101,6 +101,7 @@ public:
     void addMovieObjects();
 
     void createGraph(int startYear);
+
 
 
 

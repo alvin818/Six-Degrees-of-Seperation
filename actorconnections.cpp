@@ -41,7 +41,7 @@ int main(int argc, char *argv[]){
     ActorGraph actor_graph;
 
     // get vector of pairs (actor 1, actor 2)
-    vector<pair<string,string>> pairsToSearchFor = actor_graph.getActorPairs(test_pairs);
+    unordered_map<string, pair<string,string>> pairsToSearchFor = actor_graph.getActorPairs(test_pairs);
     
 
     vector<string> actorsToSearchfor;
@@ -49,8 +49,9 @@ int main(int argc, char *argv[]){
     // Add actor pairs to new vector of strings
     for(auto onePair = pairsToSearchFor.begin(); onePair != pairsToSearchFor.end(); onePair++){
     	// push each element of pair to vector
-    	actorsToSearchfor.push_back(get<0>(*onePair));
-    	actorsToSearchfor.push_back(get<1>(*onePair));
+		auto pair = onePair->second;
+    	actorsToSearchfor.push_back(get<0>(pair));
+    	actorsToSearchfor.push_back(get<1>(pair));
     }
 
 
@@ -76,43 +77,41 @@ int main(int argc, char *argv[]){
 
 	cout << "Begginning BFS in year: " << yearToStart << endl;
 	bool done = false;
-	vector<string> pairsAndYear;
+	// will hold pairs that have been found to avoid pointless searches
+	unordered_map<string, pair<string, string>> foundPairs;
+
+	// Do BFS on pairs until all pairs have been found or the year exceeds 2015
 	while (!done || yearToStart < 2016){
 		// create add actor nodes for given year
 		actor_graph.createGraph(yearToStart);
-
+		
 		// run BFS on all pairs
 		for (auto onePair = pairsToSearchFor.begin(); onePair != pairsToSearchFor.end();){
 			// if search was successful then keep track of year and connect it with the pair
-			string actor1 = get<0>(*onePair);
-			string actor2 = get<1>(*onePair);
-			// Match was found
-			if (actor_graph.BFSearch(get<1>(*onePair), get<0>(*onePair), outFile)){
-				cout << "Connection was found in year: " << yearToStart << endl;
-				string pair_year = actor1 + actor2;
-				pairsAndYear.push_back(pair_year);
-				pairsToSearchFor.erase(onePair);				
+			unordered_map<string, pair<string, string>>::iterator got = foundPairs.find(onePair->first);
+			if (got == foundPairs.end()){
+				//string actor1 = get<0>(*onePair);
+				//string actor2 = get<1>(*onePair);
+				// Match was found
+				if (actor_graph.BFSearch(get<1>(onePair->second), get<0>(onePair->second), outFile)){
+					cout << "Earliest connection for pairs:" << get<1>(onePair->second) << " " << get<0>(onePair->second) << " "<< yearToStart << endl;
+					foundPairs.insert(*onePair);
+				}
 			}
-			else{
-				++onePair;
-			}
+				
 		}
-
-		if (pairsToSearchFor.size() == 0){
-			done = true;
+		if (foundPairs.size() == pairsToSearchFor.size()){
+			cout << "All pairs have been found" << endl;
+			break;
 		}
-		else{
-			// increment year until all pair searches have been complete
-			yearToStart++;
-		}
-		
+		yearToStart++;
 	}
 
 
- 
+	/*
 	for (auto pair = pairsAndYear.begin(); pair != pairsAndYear.end(); pair++){
 		cout << *pair << endl;
 	}
-  
+	*/
 	return 0;
 }
