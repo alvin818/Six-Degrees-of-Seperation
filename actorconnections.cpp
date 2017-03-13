@@ -99,9 +99,9 @@ int main(int argc, char *argv[]){
 					foundPairs.insert(*onePair);
 				}
 			}
-			else{
-				cout << "Pair has been found" << endl;
-			}
+			//else{
+				//cout << "Pair has been found" << endl;
+			//}
 				
 		}
 		if (foundPairs.size() == pairsToSearchFor.size()){
