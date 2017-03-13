@@ -73,6 +73,8 @@ int main(int argc, char *argv[]){
 	/*
 		Now build graph using queue of movie objects
 	*/
+
+	cout << "Begginning BFS in year: " << yearToStart << endl;
 	bool done = false;
 	vector<string> pairsAndYear;
 	while (!done){
@@ -83,7 +85,8 @@ int main(int argc, char *argv[]){
 		for (auto onePair = pairsToSearchFor.begin(); onePair != pairsToSearchFor.end(); onePair++){
 			// if search was successful then keep track of year and connect it with the pair
 			if (actor_graph.BFSearch(get<1>(*onePair), get<0>(*onePair), outFile)){
-				string pairs_year = get<0>(*onePair) + '\t' + get<1>(*onePair) + '\t' + to_string(yearToStart);
+				cout << "Connection was found in year: " << yearToStart << endl;
+				string pairs_year = (get<0>(*onePair) + '\t' + get<1>(*onePair) + '\t' + to_string(yearToStart));
 				pairsAndYear.push_back(pairs_year);
 				pairsToSearchFor.erase(onePair);			
 			}			
@@ -98,6 +101,8 @@ int main(int argc, char *argv[]){
 		}
 		
 	}
+
+
 
 	for (auto pair = pairsAndYear.begin(); pair != pairsAndYear.end(); pair++){
 		cout << *pair << endl;

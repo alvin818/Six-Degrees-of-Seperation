@@ -204,8 +204,7 @@ ActorNode* ActorGraph::createEdges(ActorNode* node, unordered_set<string> actorL
    visits
    */
 bool ActorGraph::BFSearch(string startActor, string actorToFind, ofstream& outFile){
-
-  cout << "Entering unweighted graph search..... " << endl;
+  
   // get node using actors name
   ActorNode* currActorNode = getActorNode(startActor);
   if (!currActorNode){

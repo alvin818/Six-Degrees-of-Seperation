@@ -60,9 +60,6 @@ public:
     // will hold movie objects for actor connections
     priority_queue<Movie*, vector<Movie*>, MoviePtrComp> movieObjects;
 
-	unordered_map<string, vector<pair<string, string>>> pairsAndYear;
-
-
 
 public:
     ActorGraph(void);
