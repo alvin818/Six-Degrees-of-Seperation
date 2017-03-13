@@ -87,7 +87,7 @@ int main(int argc, char *argv[]){
 		actor_graph.createGraph(yearToStart);
 		
 		// run BFS on all pairs
-		for (auto onePair = pairsToSearchFor.begin(); onePair != pairsToSearchFor.end();){
+		for (auto onePair = pairsToSearchFor.begin(); onePair != pairsToSearchFor.end(); onePair++){
 			// if search was successful then keep track of year and connect it with the pair
 			unordered_map<string, pair<string, string>>::iterator got = foundPairs.find(onePair->first);
 			if (got == foundPairs.end()){
