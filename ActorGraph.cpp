@@ -780,7 +780,7 @@ void ActorGraph::createGraph(int yearToPop){
   int num = 0;
   bool finished = false;
 	// pop all movies in given year then create temp graph
-	while (!finished || !movieObjects.empty()){
+	while (!finished && !movieObjects.empty()){
 		// pop movie obj from queue
 		currMovie = movieObjects.top();
     if(currMovie->movieYear == yearToPop){
@@ -802,13 +802,17 @@ void ActorGraph::createGraph(int yearToPop){
   }
   
 	createActorNodes();
-  
+ if(movies_map.size() == 0){
+  cout << "No new actor nodes created" << endl;
+ 
+ } 
+ else{
   cout << "Actor nodes created: " << endl;
 
   for(auto actor = actorNode_map.begin(); actor != actorNode_map.end(); actor++){
     cout << actor->first << endl;  
   }
-
+  }
 
 }
 
