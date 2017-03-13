@@ -86,6 +86,7 @@ int main(int argc, char *argv[]){
 			// if search was successful then keep track of year and connect it with the pair
 			string actor1 = get<0>(*onePair);
 			string actor2 = get<1>(*onePair);
+			// Match was found
 			if (actor_graph.BFSearch(get<1>(*onePair), get<0>(*onePair), outFile)){
 				cout << "Connection was found in year: " << yearToStart << endl;
 				string pair_year = actor1 + actor2;

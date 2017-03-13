@@ -174,6 +174,7 @@ void ActorGraph::createActorNodes(){
 
 
   }
+  cout << "No new nodes created..." << endl;
   // return fully connected graph w/ weighted edges
   //return actorNode_map;
 }
@@ -256,7 +257,6 @@ bool ActorGraph::BFSearch(string startActor, string actorToFind, ofstream& outFi
         // print path function.
         printPath(seenActorEdges, childrenNode, outFile);
         // exit the function, no more need for searching
-        cout << "done" << endl;
         return true;
       }
     }
@@ -766,8 +766,7 @@ void ActorGraph::addMovieObjects(){
   }
 
   cout << "Added movies to queue!" << endl;
-  Movie* firstMovie = movieObjects.top();
-  cout << "first movie in queue is: " << firstMovie->movieName << " " << firstMovie->movieYear << endl;
+  Movie* firstMovie = movieObjects.top();  
 }
 
 
@@ -781,7 +780,7 @@ void ActorGraph::createGraph(int yearToPop){
   int num = 0;
   bool finished = false;
 	// pop all movies in given year then create temp graph
-	while (!finished){
+	while (!finished || !movieObjects.empty()){
 		// pop movie obj from queue
 		currMovie = movieObjects.top();
     if(currMovie->movieYear == yearToPop){
@@ -792,13 +791,12 @@ void ActorGraph::createGraph(int yearToPop){
       finished = true;
     }
     //cout << "Movie popped from the queue: " << currMovie->movieName << endl;
-    num++;
+   
 	}
   
 	// now set movie_map to tempmap then create actornodes with it
-	movies_map = tempMovieMap;
-  cout << "movies popped from queue: " << endl;
-  
+	movies_map = tempMovieMap;  
+	cout << "MOvies popppppppeeddddd:::" << endl;
   for(auto movie = movies_map.begin(); movie != movies_map.end(); movie++){
     cout << movie->first << endl;  
   }
