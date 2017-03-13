@@ -75,13 +75,14 @@ int main(int argc, char *argv[]){
 		Now build graph using queue of movie objects
 	*/
 
-	cout << "Begginning BFS in year: " << yearToStart << endl;
-	bool done = false;
+	
+	//bool done = false;
 	// will hold pairs that have been found to avoid pointless searches
 	unordered_map<string, pair<string, string>> foundPairs;
 
 	// Do BFS on pairs until all pairs have been found or the year exceeds 2015
-	while (!done || yearToStart < 2016){
+	while (yearToStart < 2016){
+		cout << "Begginning BFS in year: " << yearToStart << endl;
 		// create add actor nodes for given year
 		actor_graph.createGraph(yearToStart);
 		
@@ -97,6 +98,9 @@ int main(int argc, char *argv[]){
 					cout << "Earliest connection for pairs:" << get<1>(onePair->second) << " " << get<0>(onePair->second) << " "<< yearToStart << endl;
 					foundPairs.insert(*onePair);
 				}
+			}
+			else{
+				cout << "Pair has been found" << endl;
 			}
 				
 		}
