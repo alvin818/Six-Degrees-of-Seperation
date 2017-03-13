@@ -208,6 +208,9 @@ bool ActorGraph::BFSearch(string startActor, string actorToFind, ofstream& outFi
   cout << "Entering unweighted graph search..... " << endl;
   // get node using actors name
   ActorNode* currActorNode = getActorNode(startActor);
+  if (!currActorNode){
+	  return false;
+  }
   // Make parent ptr of first node null
   currActorNode->parent = nullptr;
   // create queue of actorNodes
@@ -270,6 +273,12 @@ bool ActorGraph::BFSearch(string startActor, string actorToFind, ofstream& outFi
 ActorNode* ActorGraph::getActorNode(string actorName){
   // get starting actor node using startactor
   unordered_map<string, ActorNode*>::iterator node = actorNode_map.find(actorName);
+
+  if (node == actorNode_map.end()){
+	  cout << "Not found" << endl;
+	  return nullptr;
+  }
+  
   // first actor node 
   ActorNode* actor_node = node->second;
   // return nodek
