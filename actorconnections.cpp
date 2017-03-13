@@ -82,16 +82,19 @@ int main(int argc, char *argv[]){
 		actor_graph.createGraph(yearToStart);
 
 		// run BFS on all pairs
-		for (auto onePair = pairsToSearchFor.begin(); onePair != pairsToSearchFor.end(); onePair++){
+		for (auto onePair = pairsToSearchFor.begin(); onePair != pairsToSearchFor.end();){
 			// if search was successful then keep track of year and connect it with the pair
-			//string actor1 = get<0>(*onePair);
-      //string actor2 = get<1>(*onePair);
-      if (actor_graph.BFSearch(get<1>(*onePair), get<0>(*onePair), outFile)){
+			string actor1 = get<0>(*onePair);
+			string actor2 = get<1>(*onePair);
+			if (actor_graph.BFSearch(get<1>(*onePair), get<0>(*onePair), outFile)){
 				cout << "Connection was found in year: " << yearToStart << endl;
-				
-			//	pairsAndYear.push_back(pairs_year);
-				//pairsToSearchFor.erase(onePair);			
-			}			
+				string pair_year = actor1 + actor2;
+				pairsAndYear.push_back(pair_year);
+				pairsToSearchFor.erase(onePair);				
+			}
+			else{
+				++onePair;
+			}
 		}
 
 		if (pairsToSearchFor.size() == 0){
@@ -105,10 +108,10 @@ int main(int argc, char *argv[]){
 	}
 
 
-  /*
+ 
 	for (auto pair = pairsAndYear.begin(); pair != pairsAndYear.end(); pair++){
 		cout << *pair << endl;
 	}
-  */
+  
 	return 0;
 }
