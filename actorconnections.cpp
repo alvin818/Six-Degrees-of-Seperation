@@ -180,6 +180,7 @@ int main(int argc, char *argv[]){
 					if (sent_1 && sent_2){
 						// PAIR HAS BEEN FOUND
 						if (sent_1 == sent_2){
+							cout << "CONNECTION HAS BEEN FOUND IN EAR: " << yearToStart << endl;
 							found_pairs[pairKey] = *onePair;
 							string pairAndYear = get<0>(*onePair) + "\t" + get<1>(*onePair) + "\t" + to_string(yearToStart);
 							connections[pairKey] = pairAndYear;
