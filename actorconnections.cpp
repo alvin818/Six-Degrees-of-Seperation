@@ -163,7 +163,7 @@ int main(int argc, char *argv[]){
 				auto it = found_pairs.find(pairKey);
 
 				// if pair has not been found then search
-				if (it == foundPairs.end()){
+				if (it == found_pairs.end()){
 					// PAIR HAS BEEN FOUND
 					if (actor_set.find(onePair->first) == actor_set.find(onePair->second)){
 						found_pairs[pairKey] = *onePair;
