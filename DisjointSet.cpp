@@ -71,13 +71,10 @@ bool DisjointSet::getMoviesFromFile(const char* in_filename, int startYear){
 		// If key is not found then create new movie object and add it to map
 		if (got == movies.end()){
 			MovieDS *newMovie = new MovieDS(movie_title, movie_year);
+			cout << "Made new movie object: " << newMovie->movieName << endl;
 			newMovie->_actors.push_back(actor_name);
 
-			// Make a pair with movie name and movie object
-			pair<string, MovieDS*> moviePair(movieKey, newMovie);
-
-			// insert the pair into the movie map
-			movies.insert(moviePair);
+			movies[movieKey] = newMovie;			
 		}
 
 		// Add actor to movie object returned by the iterator
@@ -109,6 +106,7 @@ bool DisjointSet::getMoviesFromFile(const char* in_filename, int startYear){
 void DisjointSet::addMoviesToPQ(){
 
 	for (auto currMovie = movies.begin(); currMovie != movies.end(); currMovie++){
+		cout << currMovie->second->movieName << endl;
 		movieObjects.push(currMovie->second);	
 	}
 
