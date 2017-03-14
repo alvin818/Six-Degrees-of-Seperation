@@ -111,13 +111,15 @@ int main(int argc, char *argv[]){
 		}
 		yearToStart++;
 	}
+  
 
+  cout << "BLAH" << endl;
 	// Now print result to output file in correct order
 
 	outFile.close();
 
 	ofstream out_File(out_file, ofstream::out);
-
+  
 	actor_graph.printActorConnections(connections, pairsToSearchFor, out_File);
 
 
