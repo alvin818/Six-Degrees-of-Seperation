@@ -116,6 +116,9 @@ void DisjointSet::set_union(string actor_1, string actor_2){
 	string sentNode1 = find(actor_1);
 	string sentNode2 = find(actor_2);
 
+	cout << "Sentinal node for actor 1: " << sentNode1 << endl;
+	cout << "Sentinal node for actor 2: " << sentNode2 << endl;
+
 	// already in the same set
 	if (sentNode1 == sentNode2){
 		return;
@@ -173,6 +176,7 @@ void DisjointSet::createSets(vector<string> movie_titles){
 	for (auto movieIt = movie_titles.begin(); movieIt != movie_titles.end(); movieIt++){
 		// get movie object
 		MovieDS* movie = getMovie(*movieIt);
+		cout << "Creating sets with actors from film: " << movie->movieName << endl;
 		// get actor list
 		vector<string> actorList = movie->_actors;
 
@@ -244,7 +248,7 @@ void DisjointSet::searchActorList(vector<string> actorList){
 		}
 		// actor already has a set made, iterator hold actor node and key
 		else{
-			cout << "Set for actor: "<< actorSet->first << "already exits" << endl;
+			cout << "Set for actor: "<< actorSet->first << " already exits" << endl;
 		}	
 	}
 
