@@ -140,18 +140,18 @@ void DisjointSet::set_union(string actor_1, string actor_2){
 	if (sentinalNode1->size > sentinalNode2->size){
 		sentinalNode2->parent = sentinalNode1;
 		sentinalNode1->size += sentinalNode2->size;
-		cout << "Parent of smaller sentinal node: " << it_1->second->parent << endl;
+		cout << "Parent of smaller sentinal node: " << it_1->second->parent->actorName << endl;
 	}
 	else if (sentinalNode1->size < sentinalNode2->size){
 		sentinalNode1->parent = sentinalNode2;
 		sentinalNode2->size += sentinalNode1->size;
-		cout << "Parent of smaller sentinal node: " << it_2->second->parent << endl;
+		cout << "Parent of smaller sentinal node: " << it_2->second->parent->actorName << endl;
 	}
 	// sizes are equal, tie is given to first sentinal node
 	else{
 		sentinalNode2->parent = sentinalNode1;
 		sentinalNode1->size += 1;
-		cout << "Parent of smaller sentinal node: " << it_1->second->parent << endl;
+		cout << "Parent of smaller sentinal node: " << it_1->second->parent->actorName << endl;
 	}
 
 
@@ -162,7 +162,7 @@ ActorNodeDS* DisjointSet::find(string actorName){
 
 	unordered_map<string, ActorNodeDS*>::iterator actorSet = mapOfSets.find(actorName);
 	if (actorSet == mapOfSets.end()){
-		cout << "Actor does not have a set year!" << endl;
+		cout << "Actor does not have a set yet!" << endl;
 		return nullptr;
 	}
 
