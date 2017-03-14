@@ -158,7 +158,7 @@ int main(int argc, char *argv[]){
 			}
 
 			// create the sets and put into map
-			actor_set.searchActorList(movieTitles);
+			actor_set.createSets(movieTitles);
 
 			// Now create unions between the sets 
 			//actor_set.connectSets(movieTitles);

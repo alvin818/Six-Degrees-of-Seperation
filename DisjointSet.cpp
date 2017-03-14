@@ -72,10 +72,8 @@ bool DisjointSet::getMoviesFromFile(const char* in_filename, int startYear){
 
 			// If key is not found then create new movie object and add it to map
 			if (got == movies.end()){
-				MovieDS *newMovie = new MovieDS(movie_title, movie_year);
-				cout << "Made new movie object: " << newMovie->movieName << endl;
+				MovieDS *newMovie = new MovieDS(movie_title, movie_year);				
 				newMovie->_actors.push_back(actor_name);
-
 				movies[movieKey] = newMovie;
 			}
 
