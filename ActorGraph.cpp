@@ -810,8 +810,7 @@ void ActorGraph::printActorConnections(unordered_map<string, string> connections
 		// use key to print the results in correct order
 		string key = pairs->first + pairs->second;
 		unordered_map<string, string>::iterator pairToPrint = connections.find(key);
-		outFile << pairToPrint->second << endl;
-		cout << pairToPrint->second << endl;	
+		outFile << pairToPrint->second << endl;			
 	}
 
 }

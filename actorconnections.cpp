@@ -48,9 +48,8 @@ int main(int argc, char *argv[]){
 
     // Add actor pairs to new vector of strings
     for(auto onePair = pairsToSearchFor.begin(); onePair != pairsToSearchFor.end(); onePair++){
-    	// push each element of pair to vector
-		cout << onePair->first << onePair->second << endl;
-		//auto pair = onePair->second;
+    	
+		// push each element of pair to vector		
     	actorsToSearchfor.push_back(get<0>(*onePair));
     	actorsToSearchfor.push_back(get<1>(*onePair));
     }
@@ -94,8 +93,7 @@ int main(int argc, char *argv[]){
 			unordered_map<string, pair<string, string>>::iterator got = foundPairs.find(pairKey);
 			if (got == foundPairs.end()){				
 				// Match was found
-				if (actor_graph.BFSearchAC(get<1>(*onePair), get<0>(*onePair))) {
-					cout << "Earliest connection for pairs:" << get<1>(*onePair) << " " << get<0>(*onePair) << " "<< yearToStart << endl;
+				if (actor_graph.BFSearchAC(get<1>(*onePair), get<0>(*onePair))) {					
 					foundPairs[pairKey] = *onePair;
 					string pairAndYear = get<0>(*onePair) + "\t" + get<1>(*onePair) + "\t" + to_string(yearToStart);
 					connections[pairKey] = pairAndYear;				
