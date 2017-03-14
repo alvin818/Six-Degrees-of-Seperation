@@ -22,7 +22,7 @@ all: pathfinder actorconnections
 
 pathfinder: ActorGraph.o ActorEdge.o ActorNode.o Movie.o
 
-actorconnections: ActorGraph.o ActorEdge.o ActorNode.o Movie.o
+actorconnections: ActorGraph.o ActorEdge.o ActorNode.o Movie.o ActorNodeDS.o MovieDS.o DisjointSet.o
 
 
 # include what ever source code *.h files ActorGraph relies on (these are merely the ones that were used in the solution)
