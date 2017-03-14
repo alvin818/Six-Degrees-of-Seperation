@@ -104,7 +104,8 @@ public:
 
 	void printActorConnections(unordered_map<string, string>, vector<pair<string, string>>, ofstream&);
 
-
+	// BFS for actor connections
+	bool BFSearchAC(string startActor, string actorToFind);
 
     /** You can modify this method definition as you wish
      *

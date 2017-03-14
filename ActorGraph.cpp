@@ -808,6 +808,7 @@ void ActorGraph::createGraph(int yearToPop){
 }
 
 void ActorGraph::printActorConnections(unordered_map<string, string> connections, vector<pair<string, string>> pairsToSearchFor, ofstream& outFile){
+	
 	cout << "Writing results to file .....";
 	//print results to out file for each actor pair
 	for (auto pairs = pairsToSearchFor.begin(); pairs != pairsToSearchFor.end(); pairs++){
@@ -820,6 +821,68 @@ void ActorGraph::printActorConnections(unordered_map<string, string> connections
 	cout << " done" << endl;
 
 }
+
+
+bool ActorGraph::BFSearchAC(string startActor, string actorToFind){
+
+	// get node using actors name
+	ActorNode* currActorNode = getActorNode(startActor);
+	if (!currActorNode){
+		return false;
+	}
+	// Make parent ptr of first node null
+	currActorNode->parent = nullptr;
+	// create queue of actorNodes
+	queue<ActorNode*> actorQueue;
+	// push first node into queue
+	actorQueue.push(currActorNode);
+	// have a set containing actor nodes already put into the queue
+	unordered_set<ActorNode*> seenActorNodes;
+	// map of visited edges using actor name as key
+	unordered_map<string, string> seenActorEdges;
+	// insert the starting node into the set 
+	seenActorNodes.insert(currActorNode);
+
+	// Beginning of BFS
+	while (!actorQueue.empty()){
+		// get actor node from the front of the queue
+		currActorNode = actorQueue.front();
+		// pop it
+		actorQueue.pop();
+		// now get all adjacent actors via edges
+		auto edge = currActorNode->movieEdges.begin();
+		// for each name in edge, get node and add to queue
+		for (; edge != currActorNode->movieEdges.end(); ++edge){
+
+			// get actor node using name from edge list
+			ActorNode* childrenNode = getActorNode((*edge)->coStarName);
+
+			// See if node had been seen before
+			unordered_set<ActorNode*>::iterator got = seenActorNodes.find(childrenNode);
+			// push node to queue if not found in set
+			if (got == seenActorNodes.end()){
+				// Create an edge pair with costar name and movie info
+				pair<string, string> edgePair((*edge)->coStarName, (*edge)->movieInfo);
+				// insert into map
+				seenActorEdges.insert(edgePair);
+				// Set parent to current node
+				childrenNode->parent = currActorNode;
+				// insert node into set and push into queue
+				seenActorNodes.insert(childrenNode);
+				actorQueue.push(childrenNode);
+			}
+			// Now check if current node is the node being searched for
+			if (childrenNode->actorName == actorToFind){				
+				// exit the function, no more need for searching
+				return true;
+			}
+		}
+
+	}
+	//cout << "LOL sorry connection you are searching for does not exist, try again buddy" << endl;
+	return false;
+}
+
 
 
 

@@ -94,13 +94,13 @@ int main(int argc, char *argv[]){
 			if (got == foundPairs.end()){
 				
 				// Match was found
-				if (actor_graph.BFSearch(get<1>(*onePair), get<0>(*onePair), outFile)){
+				if (actor_graph.BFSearchAC(get<1>(*onePair), get<0>(*onePair))) {
 					cout << "Earliest connection for pairs:" << get<1>(*onePair) << " " << get<0>(*onePair) << " "<< yearToStart << endl;
 					foundPairs[pairKey] = *onePair;
 					string pairAndYear = get<0>(*onePair) + "\t" + get<1>(*onePair) + "\t" + to_string(yearToStart);
-					connections[pairAndYear] = pairAndYear;
+					connections[pairKey] = pairAndYear;
 					//cout << pairAndYear << endl;
-					outFile << pairAndYear << endl;
+					//outFile << pairAndYear << endl;
 				}
 			}				
 		}
@@ -113,14 +113,14 @@ int main(int argc, char *argv[]){
 	}
   
 
-  cout << "BLAH" << endl;
+	cout << "BLAH" << endl;
 	// Now print result to output file in correct order
 
-	outFile.close();
+	//outFile.close();
 
-	ofstream out_File(out_file, ofstream::out);
+	//ofstream out_File(out_file, ofstream::out);
   
-	actor_graph.printActorConnections(connections, pairsToSearchFor, out_File);
+	actor_graph.printActorConnections(connections, pairsToSearchFor, outFile);
 
 
 	return 0;
