@@ -526,10 +526,10 @@ void ActorGraph::resetNodes(unordered_set<string> visitedNodes){
 }
 
 
-unordered_map<string, pair<string, string>> ActorGraph::getActorPairs(const char* actorPairs){
+vector<pair<string, string>> ActorGraph::getActorPairs(const char* actorPairs){
 
 	// Vector to return
-	unordered_map<string, pair<string, string>> pairs;
+	vector<pair<string, string>> pairs;
 
 	// Initialize the file stream
 	ifstream infile(actorPairs);
@@ -568,7 +568,7 @@ unordered_map<string, pair<string, string>> ActorGraph::getActorPairs(const char
 		string actor_1(record[0]);
 		string actor_2(record[1]);
 
-		string key = actor_1 + actor_2;
+		//string key = actor_1 + actor_2;
 
 		//actor_1 = ("(" + actor_1 + ")");
 		//actor_2 = ("(" + actor_2 + ")");
@@ -577,7 +577,7 @@ unordered_map<string, pair<string, string>> ActorGraph::getActorPairs(const char
 		cout << "Pair to find: " << actor_1 << "\t" << actor_2 << endl;
 
 		// Add to vector
-		pairs[key] = make_pair(actor_1, actor_2);
+		pairs.push_back(make_pair(actor_1, actor_2));
 
 	}
 	if (!infile.eof()) {
@@ -809,6 +809,18 @@ void ActorGraph::createGraph(int yearToPop){
 
 }
 
+void ActorGraph::printActorConnections(unordered_map<string, string> connections, vector<pair<string, string>> pairsToSearchFor, ofstream& outFile){
+	
+	//print results to out file for each actor pair
+	for (auto pairs = pairsToSearchFor.begin(); pairs != pairsToSearchFor.end(); pairs++){
+		string key = pairs->first + pairs->second;
+		unordered_map<string, string>::iterator pairToPrint = connections.find(key);
+		outFile << pairToPrint->second << endl;
+		cout << pairToPrint->second << endl;	
+	}
+
+
+}
 
 
 
