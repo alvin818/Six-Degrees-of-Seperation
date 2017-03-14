@@ -7,8 +7,8 @@
 that acted in the film.
 */
 
-#ifndef MOVIE_H
-#define MOVIE_H
+#ifndef MOVIEDS_H
+#define MOVIEDS_H
 
 #include <string>
 #include <vector>

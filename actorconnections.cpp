@@ -131,7 +131,7 @@ int main(int argc, char *argv[]){
 		actor_set.addMoviesToPQ();
 
 		// will hold pairs that have been found to avoid pointless searches
-		unordered_map<string, pair<string, string>> foundPairs;
+		unordered_map<string, pair<string, string>> found_pairs;
 
 		// holds strings of the pairs and year they connected
 		unordered_map<string, string> connections;
@@ -154,13 +154,13 @@ int main(int argc, char *argv[]){
 			// Now search for the pairs if it has not been found		
 			for (auto onePair = pairsToSearchFor.begin(); onePair != pairsToSearchFor.end(); onePair++){
 				string pairKey = onePair->first + onePair->second;
-				auto it = foundPairs.find(pairKey);
+				auto it = found_pairs.find(pairKey);
 
 				// if pair has not been found then search
 				if (it == foundPairs.end()){
 					// PAIR HAS BEEN FOUND
 					if (actor_set.find(onePair->first) == actor_set.find(onePair->second)){
-						foundPairs[pairKey] = *onePair;
+						found_pairs[pairKey] = *onePair;
 						string pairAndYear = get<0>(*onePair) + "\t" + get<1>(*onePair) + "\t" + to_string(yearToStart);
 						connections[pairKey] = pairAndYear;
 					}
@@ -168,9 +168,9 @@ int main(int argc, char *argv[]){
 
 			}
 			// Check if all pairs have been found
-			if (foundPairs.size() == pairsToSearchFor.size()){
+			if (found_pairs.size() == pairsToSearchFor.size()){
 				cout << "ALL PAIRS HAVE BEEN FOUND" << endl;
-				return;
+				break;
 			}
 			// continue to increment year
 			yearToStart++;
