@@ -169,16 +169,22 @@ ActorNodeDS* DisjointSet::find(string actorName){
 
 	ActorNodeDS *currNode = actorSet->second;
 
-	// node is a sentinal node
-	if (currNode->parent->actorName == actorName){
-		return currNode;
+	if (currNode != currNode->parent){	
+		currNode->parent = find(currNode->parent->actorName);
 	}
 
-	// recursively call find on parents name until sentinal node reached
-	currNode->parent = find(currNode->parent->actorName);
-	
-	// return name
-	return currNode;;
+	return currNode->parent;
+
+	//// node is a sentinal node
+	//if (currNode->parent->actorName == actorName){
+	//	return currNode;
+	//}
+
+	//// recursively call find on parents name until sentinal node reached
+	//currNode = find(currNode->parent->actorName);
+	//
+	//// return name
+	//return currNode;;
 
 }
 
