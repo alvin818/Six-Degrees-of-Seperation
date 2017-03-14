@@ -62,33 +62,35 @@ bool DisjointSet::getMoviesFromFile(const char* in_filename, int startYear){
 		string movie_title(record[1]);
 		int movie_year = stoi(record[2]);	
 
-		// Combine movie title and year into string variable
-		string movieKey = (movie_title + to_string(movie_year));		
+		if (movie_year >= startYear){
 
-		// First check if movie object has not been made already to avoid repeat movie objects
-		unordered_map<string, MovieDS*>::const_iterator got = movies.find(movieKey);
+			// Combine movie title and year into string variable
+			string movieKey = (movie_title + to_string(movie_year));
 
-		// If key is not found then create new movie object and add it to map
-		if (got == movies.end()){
-			MovieDS *newMovie = new MovieDS(movie_title, movie_year);
-			cout << "Made new movie object: " << newMovie->movieName << endl;
-			newMovie->_actors.push_back(actor_name);
+			// First check if movie object has not been made already to avoid repeat movie objects
+			unordered_map<string, MovieDS*>::const_iterator got = movies.find(movieKey);
 
-			movies[movieKey] = newMovie;			
+			// If key is not found then create new movie object and add it to map
+			if (got == movies.end()){
+				MovieDS *newMovie = new MovieDS(movie_title, movie_year);
+				cout << "Made new movie object: " << newMovie->movieName << endl;
+				newMovie->_actors.push_back(actor_name);
+
+				movies[movieKey] = newMovie;
+			}
+
+			// Add actor to movie object returned by the iterator
+			else{
+
+				MovieDS *movieObject = got->second;
+				movieObject->_actors.push_back(actor_name);
+			}
+
+			/*
+			At this point the unordered_map of movie objects has been filled.
+			Now create the actorNodes using this data.
+			*/
 		}
-
-		// Add actor to movie object returned by the iterator
-		else{
-
-			MovieDS *movieObject = got->second;
-			movieObject->_actors.push_back(actor_name);
-		}
-
-		/*
-		At this point the unordered_map of movie objects has been filled.
-		Now create the actorNodes using this data.
-		*/
-
 	}
 
 	if (!infile.eof()) {
