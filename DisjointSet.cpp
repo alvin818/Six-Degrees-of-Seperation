@@ -110,6 +110,7 @@ void DisjointSet::addMoviesToPQ(){
 
 	for (auto currMovie = movies.begin(); currMovie != movies.end(); currMovie++){
 		movieObjects.push(currMovie->second);
+		cout << currMovie->first << endl;
 	}
 }
 
@@ -238,6 +239,7 @@ void DisjointSet::searchActorList(vector<string> actorList){
 		// if it doesnt exit then create sentinal node
 		if(actorSet == mapOfSets.end()){
 			ActorNodeDS *newActorNode = new ActorNodeDS(*actor_it);
+			cout << "Creating single set for actor : " << *actor_it << endl;
 			// set its parent to itself
 			newActorNode->parent = newActorNode;
 			// add to map

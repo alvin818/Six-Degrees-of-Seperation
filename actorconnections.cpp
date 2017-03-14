@@ -63,10 +63,11 @@ int main(int argc, char *argv[]){
 
 		// Now find the earliest year to begin building graph
 		int yearToStart = actor_graph.findOldestFilmYear(movie_casts, actorsToSearchfor);
-		// sanity print statement
-		cout << "Earliest movie year in actors to search for is: " << yearToStart << endl;
+		
 
 	if (typeOfSearch == "bfs"){
+		// sanity print statement
+		cout << "Earliest movie year in actors to search for is: " << yearToStart << endl;
 		/*
 			Using this year, a graph can be built using all movies starting from this year and forward.
 			Create movie objects for each year and place into priority queue that orders the objects from
@@ -120,15 +121,20 @@ int main(int argc, char *argv[]){
 
 	// Disjoint Set Search
 	else{
+		// sanity print statement
+		cout << "Earliest movie year in actors to search for is: " << yearToStart << endl;
 
-		// will hold pairs that have been found to avoid pointless searches
-		unordered_map<string, pair<string, string>> foundPairs;
+		cout << "Implementing actor connections using union find!" << endl;
+		
 
 		// get movies starting from given year
 		actor_set.getMoviesFromFile(movie_casts, yearToStart);
 		
+		cout << "Got movies from input file!" << endl;
 		// Add objects to priority queue
 		actor_set.addMoviesToPQ();
+
+		cout << "Added movies to priorty queue" << endl;
 
 		// will hold pairs that have been found to avoid pointless searches
 		unordered_map<string, pair<string, string>> found_pairs;
