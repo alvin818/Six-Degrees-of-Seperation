@@ -110,7 +110,7 @@ void DisjointSet::addMoviesToPQ(){
 		movieObjects.push(currMovie->second);	
 	}
 
-	cout << "first film to be popped : " << movieObjects.top() << endl;
+	cout << "first film to be popped : " << movieObjects.top()->movieName << " " << movieObjects.top()->movieYear << endl;
 }
 
 // Function unifies two sentinal nodes of two given actors, will be called for each 2 nodes in a given movie
