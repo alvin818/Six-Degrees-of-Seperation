@@ -82,8 +82,7 @@ int main(int argc, char *argv[]){
 	unordered_map<string, string> connections;
 
 	// Do BFS on pairs until all pairs have been found or the year exceeds 2015
-	while (yearToStart < 2016){
-		cout << "Begginning BFS in year: " << yearToStart << endl;
+	while (yearToStart < 2016){		
 		// create add actor nodes for given year
 		actor_graph.createGraph(yearToStart);
 		
@@ -115,8 +114,11 @@ int main(int argc, char *argv[]){
 
 	// Now print result to output file in correct order
 
+	outFile.close();
 
-	actor_graph.printActorConnections(connections, pairsToSearchFor, outFile);
+	ofstream out_File(out_file, ofstream::out);
+
+	actor_graph.printActorConnections(connections, pairsToSearchFor, out_File);
 
 
 	return 0;

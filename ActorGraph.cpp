@@ -174,9 +174,7 @@ void ActorGraph::createActorNodes(){
 
 
 	}
-	cout << "No new nodes created..." << endl;
-	// return fully connected graph w/ weighted edges
-	//return actorNode_map;
+	
 }
 
 /*
@@ -810,7 +808,7 @@ void ActorGraph::createGraph(int yearToPop){
 }
 
 void ActorGraph::printActorConnections(unordered_map<string, string> connections, vector<pair<string, string>> pairsToSearchFor, ofstream& outFile){
-	
+	cout << "Writing results to file .....";
 	//print results to out file for each actor pair
 	for (auto pairs = pairsToSearchFor.begin(); pairs != pairsToSearchFor.end(); pairs++){
 		string key = pairs->first + pairs->second;
@@ -819,6 +817,7 @@ void ActorGraph::printActorConnections(unordered_map<string, string> connections
 		cout << pairToPrint->second << endl;	
 	}
 
+	cout << " done" << endl;
 
 }
 
