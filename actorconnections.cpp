@@ -101,8 +101,7 @@ int main(int argc, char *argv[]){
 			}				
 		}
 		// once all pairs have been found break from loop
-		if (foundPairs.size() == pairsToSearchFor.size()){
-			cout << "All pairs have been found" << endl;
+		if (foundPairs.size() == pairsToSearchFor.size()){			
 			break;
 		}
 		// increment year until all pairs have been found

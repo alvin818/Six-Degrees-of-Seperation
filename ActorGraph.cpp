@@ -566,8 +566,6 @@ vector<pair<string, string>> ActorGraph::getActorPairs(const char* actorPairs){
 		string actor_1(record[0]);
 		string actor_2(record[1]);		
 
-		cout << "Pair to find: " << actor_1 << "\t" << actor_2 << endl;
-
 		// Add to vector
 		pairs.push_back(make_pair(actor_1, actor_2));
 
