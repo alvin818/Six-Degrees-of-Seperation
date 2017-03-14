@@ -228,6 +228,7 @@ MovieDS* DisjointSet::getMovie(string key){
 */
 void DisjointSet::searchActorList(vector<string> actorList){
 
+	// for each actor in single film do the following....
 	for (auto actor_it = actorList.begin(); actor_it != actorList.end(); actor_it++){
 	
 		unordered_map<string, ActorNodeDS*>::iterator actorSet = mapOfSets.find(*actor_it);
@@ -243,7 +244,7 @@ void DisjointSet::searchActorList(vector<string> actorList){
 		}
 		// actor already has a set made, iterator hold actor node and key
 		else{
-			cout << "Set already exits" << endl;
+			cout << "Set for actor: "<< actorSet->first << "already exits" << endl;
 		}	
 	}
 
@@ -254,6 +255,8 @@ void DisjointSet::connectSets(vector<string> actorList){
 	for (unsigned int i = 1; i < actorList.size(); i++){
 		string actor1 = actorList.at(i - 1);
 		string actor2 = actorList.at(i);
+
+		cout << "calling union on the following two actors: " << actor1 << " " << actor2 << endl;
 
 		// set union between two actors
 		set_union(actor1, actor2);
