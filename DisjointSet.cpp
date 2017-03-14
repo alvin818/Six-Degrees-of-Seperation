@@ -124,13 +124,19 @@ void DisjointSet::set_union(string actor_1, string actor_2){
 		return;
 	}
 	
+	
 	// get sentinal nodes of each actor
 	unordered_map<string, ActorNodeDS*>::iterator it_1 = mapOfSets.find(sentNode1);
 	unordered_map<string, ActorNodeDS*>::iterator it_2 = mapOfSets.find(sentNode2);
 
+	if (it_1 == mapOfSets.end()){
+		cout << "FUCK" << endl;
+	}
+
 	ActorNodeDS *sentinalNode1 = it_1->second;
 	ActorNodeDS *sentinalNode2 = it_2->second;
 	
+
 	// now compare sizes 
 
 	// if size of one node is greater then set the smallers parent to larger node
@@ -177,6 +183,7 @@ void DisjointSet::createSets(vector<string> movie_titles){
 		// get movie object
 		MovieDS* movie = getMovie(*movieIt);
 		cout << "Creating sets with actors from film: " << movie->movieName << endl;
+		cout << endl;
 		// get actor list
 		vector<string> actorList = movie->_actors;
 
