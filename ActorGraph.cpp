@@ -759,8 +759,8 @@ void ActorGraph::createMovieObjects(const char* in_filename, int startYear){
 
 
 /*
-	ADD SOME COMMENTS DAWG
-	*/
+	Adds all movies object to priority queue
+*/
 void ActorGraph::addMovieObjects(){
 
 	// add movies to priority queue 
@@ -774,54 +774,38 @@ void ActorGraph::addMovieObjects(){
 
 
 /*
-	ADD SOME COMMENTS BRO
-	*/
+	using given year, pops all movies made in that year. 	
+*/
 void ActorGraph::createGraph(int yearToPop){
-	//cout << "Creating graph with movies in year: " << yearToPop << endl;
+	
 	Movie* currMovie = movieObjects.top();
 	unordered_map<string, Movie*> tempMovieMap;
 	int num = 0;
 	bool finished = false;
+
 	// pop all movies in given year then create temp graph
 	while (!finished && !movieObjects.empty()){
+
 		// pop movie obj from queue
 		currMovie = movieObjects.top();
 		if (currMovie->movieYear == yearToPop){
 			movieObjects.pop();
 			tempMovieMap[currMovie->movieName] = currMovie;
 		}
+		// finish once all movies from that year have been popped
 		else{
 			finished = true;
 		}
-		//cout << "Movie popped from the queue: " << currMovie->movieName << endl;
+		
 
 	}
 
 	// now set movie_map to tempmap then create actornodes with it
 	movies_map = tempMovieMap;
-	/*
-	cout << "MOvies popppppppeeddddd:::" << endl;
-	for (auto movie = movies_map.begin(); movie != movies_map.end(); movie++){
-		cout << movie->first << endl;
-	}
-	*/
-
+	
+	// Create actor nodes with new movies objects
 	createActorNodes();
-	/*
-	if (movies_map.size() == 0){
-		cout << "No new actor nodes created" << endl;
-
-	}
-	*/
-	/*
-	else{
-		cout << "Actor nodes created: " << endl;
-
-		for (auto actor = actorNode_map.begin(); actor != actorNode_map.end(); actor++){
-			cout << actor->first << endl;
-		}
-	}
-	*/
+	
 
 }
 

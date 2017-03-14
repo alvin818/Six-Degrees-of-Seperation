@@ -49,6 +49,7 @@ int main(int argc, char *argv[]){
     // Add actor pairs to new vector of strings
     for(auto onePair = pairsToSearchFor.begin(); onePair != pairsToSearchFor.end(); onePair++){
     	// push each element of pair to vector
+		cout << onePair->first << endl;
 		auto pair = onePair->second;
     	actorsToSearchfor.push_back(get<0>(pair));
     	actorsToSearchfor.push_back(get<1>(pair));
@@ -74,9 +75,7 @@ int main(int argc, char *argv[]){
 	/*
 		Now build graph using queue of movie objects
 	*/
-
-	
-	//bool done = false;
+		
 	// will hold pairs that have been found to avoid pointless searches
 	unordered_map<string, pair<string, string>> foundPairs;
 
@@ -91,31 +90,23 @@ int main(int argc, char *argv[]){
 			// if search was successful then keep track of year and connect it with the pair
 			unordered_map<string, pair<string, string>>::iterator got = foundPairs.find(onePair->first);
 			if (got == foundPairs.end()){
-				//string actor1 = get<0>(*onePair);
-				//string actor2 = get<1>(*onePair);
+				
 				// Match was found
 				if (actor_graph.BFSearch(get<1>(onePair->second), get<0>(onePair->second), outFile)){
 					cout << "Earliest connection for pairs:" << get<1>(onePair->second) << " " << get<0>(onePair->second) << " "<< yearToStart << endl;
 					foundPairs.insert(*onePair);
+					string pairAndYear = get<0>(onePair->second) + "\t" + get<1>(onePair->second) + "\t" + to_string(yearToStart);
+					cout << pairAndYear << endl;
+					outFile << pairAndYear << endl;
 				}
-			}
-			//else{
-				//cout << "Pair has been found" << endl;
-			//}
-				
+			}				
 		}
+		// once all pairs have been found break from loop
 		if (foundPairs.size() == pairsToSearchFor.size()){
 			cout << "All pairs have been found" << endl;
 			break;
 		}
 		yearToStart++;
-	}
-
-
-	/*
-	for (auto pair = pairsAndYear.begin(); pair != pairsAndYear.end(); pair++){
-		cout << *pair << endl;
-	}
-	*/
+	}	
 	return 0;
 }
