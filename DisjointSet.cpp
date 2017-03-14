@@ -121,6 +121,7 @@ void DisjointSet::set_union(string actor_1, string actor_2){
 
 	// already in the same set
 	if (sentNode1 == sentNode2){
+		cout << "Actors are already in same set" << endl;
 		return;
 	}
 	

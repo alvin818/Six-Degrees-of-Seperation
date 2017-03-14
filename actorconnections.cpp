@@ -153,6 +153,11 @@ int main(int argc, char *argv[]){
 
 			cout << "Movies in year : " << yearToStart << endl;
 			
+			if (movieTitles.size() == 0){
+				yearToStart++;
+				continue;
+			}
+
 			for (auto it = movieTitles.begin(); it != movieTitles.end(); it++){
 				cout << *it << endl;
 			}
@@ -179,11 +184,14 @@ int main(int argc, char *argv[]){
 					// Either both or one of the pairs does not have a set created yeat
 					if (sent_1 && sent_2){
 						// PAIR HAS BEEN FOUND
-						if (sent_1 == sent_2){
+						if (sent_1->actorName == sent_2->actorName){
 							cout << "CONNECTION HAS BEEN FOUND IN EAR: " << yearToStart << endl;
 							found_pairs[pairKey] = *onePair;
 							string pairAndYear = get<0>(*onePair) + "\t" + get<1>(*onePair) + "\t" + to_string(yearToStart);
 							connections[pairKey] = pairAndYear;
+						}
+						else{
+							cout << "No connection was found..." << endl;
 						}
 					}					
 				}
