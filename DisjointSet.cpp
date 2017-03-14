@@ -182,8 +182,8 @@ void DisjointSet::createSets(vector<string> movie_titles){
 	for (auto movieIt = movie_titles.begin(); movieIt != movie_titles.end(); movieIt++){
 		// get movie object
 		MovieDS* movie = getMovie(*movieIt);
-		cout << "Creating sets with actors from film: " << movie->movieName << endl;
 		cout << endl;
+		cout << "Creating sets with actors from film: " << movie->movieName << endl;
 		// get actor list
 		vector<string> actorList = movie->_actors;
 
