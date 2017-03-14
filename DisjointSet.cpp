@@ -109,9 +109,10 @@ bool DisjointSet::getMoviesFromFile(const char* in_filename, int startYear){
 void DisjointSet::addMoviesToPQ(){
 
 	for (auto currMovie = movies.begin(); currMovie != movies.end(); currMovie++){
-		movieObjects.push(currMovie->second);
-		cout << currMovie->first << endl;
+		movieObjects.push(currMovie->second);	
 	}
+
+	cout << "first film to be popped : " << movieObjects.top() << endl;
 }
 
 // Function unifies two sentinal nodes of two given actors, will be called for each 2 nodes in a given movie

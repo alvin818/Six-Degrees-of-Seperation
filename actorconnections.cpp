@@ -151,11 +151,17 @@ int main(int argc, char *argv[]){
 			// Now create sets from given year
 			vector<string> movieTitles = actor_set.getMoviesFromYear(yearToStart);
 
+			cout << "Movies in year : " << yearToStart << endl;
+			
+			for (auto it = movieTitles.begin(); it != movieTitles.end(); it++){
+				cout << *it << endl;
+			}
+
 			// create the sets and put into map
 			actor_set.searchActorList(movieTitles);
 
 			// Now create unions between the sets 
-			actor_set.connectSets(movieTitles);
+			//actor_set.connectSets(movieTitles);
 
 			// Now search for the pairs if it has not been found		
 			for (auto onePair = pairsToSearchFor.begin(); onePair != pairsToSearchFor.end(); onePair++){
