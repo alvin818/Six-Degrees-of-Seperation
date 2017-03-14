@@ -107,12 +107,9 @@ bool DisjointSet::getMoviesFromFile(const char* in_filename, int startYear){
 // will use the movies map and insert all into prioirty queue
 void DisjointSet::addMoviesToPQ(){
 
-	for (auto currMovie = movies.begin(); currMovie != movies.end(); currMovie++){
-		cout << currMovie->second->movieName << endl;
+	for (auto currMovie = movies.begin(); currMovie != movies.end(); currMovie++){		
 		movieObjects.push(currMovie->second);	
-	}
-
-	cout << "first film to be popped : " << movieObjects.top()->movieName << " " << movieObjects.top()->movieYear << endl;
+	}	
 }
 
 // Function unifies two sentinal nodes of two given actors, will be called for each 2 nodes in a given movie
@@ -203,7 +200,7 @@ vector<string> DisjointSet::getMoviesFromYear(int year){
 	
 	MovieDS *currMovie;
 	// pop all movies from given year and return the vector of movies names
-	while (!movieObjects.empty() || !finished){
+	while (!movieObjects.empty() && !finished){
 		// pop top movie object
 		currMovie = movieObjects.top();
 		// check movie year before popping
