@@ -165,17 +165,26 @@ int main(int argc, char *argv[]){
 
 			// Now search for the pairs if it has not been found		
 			for (auto onePair = pairsToSearchFor.begin(); onePair != pairsToSearchFor.end(); onePair++){
+
+				cout << "Searching for actor pairs: " << onePair->first << " " << onePair->second << endl;
 				string pairKey = onePair->first + onePair->second;
+
 				auto it = found_pairs.find(pairKey);
 
 				// if pair has not been found then search
 				if (it == found_pairs.end()){
-					// PAIR HAS BEEN FOUND
-					if (actor_set.find(onePair->first) == actor_set.find(onePair->second)){
-						found_pairs[pairKey] = *onePair;
-						string pairAndYear = get<0>(*onePair) + "\t" + get<1>(*onePair) + "\t" + to_string(yearToStart);
-						connections[pairKey] = pairAndYear;
-					}
+					// Get sentinal node for each pair, if it exist
+					ActorNodeDS *sent_1 = actor_set.find(onePair->first);
+					ActorNodeDS *sent_2 = actor_set.find(onePair->second);
+					// Either both or one of the pairs does not have a set created yeat
+					if (sent_1 && sent_2){
+						// PAIR HAS BEEN FOUND
+						if (sent_1 == sent_2){
+							found_pairs[pairKey] = *onePair;
+							string pairAndYear = get<0>(*onePair) + "\t" + get<1>(*onePair) + "\t" + to_string(yearToStart);
+							connections[pairKey] = pairAndYear;
+						}
+					}					
 				}
 
 			}

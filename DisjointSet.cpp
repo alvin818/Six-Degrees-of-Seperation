@@ -113,11 +113,11 @@ void DisjointSet::addMoviesToPQ(){
 // Function unifies two sentinal nodes of two given actors, will be called for each 2 nodes in a given movie
 void DisjointSet::set_union(string actor_1, string actor_2){
 	
-	string sentNode1 = find(actor_1);
-	string sentNode2 = find(actor_2);
+	ActorNodeDS* sentNode1 = find(actor_1);
+	ActorNodeDS* sentNode2 = find(actor_2);
 
-	cout << "Sentinal node for actor 1: " << sentNode1 << endl;
-	cout << "Sentinal node for actor 2: " << sentNode2 << endl;
+	cout << "Sentinal node for actor 1: " << sentNode1->actorName << endl;
+	cout << "Sentinal node for actor 2: " << sentNode2->actorName << endl;
 
 	// already in the same set
 	if (sentNode1 == sentNode2){
@@ -126,12 +126,8 @@ void DisjointSet::set_union(string actor_1, string actor_2){
 	
 	
 	// get sentinal nodes of each actor
-	unordered_map<string, ActorNodeDS*>::iterator it_1 = mapOfSets.find(sentNode1);
-	unordered_map<string, ActorNodeDS*>::iterator it_2 = mapOfSets.find(sentNode2);
-
-	if (it_1 == mapOfSets.end()){
-		cout << "FUCK" << endl;
-	}
+	unordered_map<string, ActorNodeDS*>::iterator it_1 = mapOfSets.find(sentNode1->actorName);
+	unordered_map<string, ActorNodeDS*>::iterator it_2 = mapOfSets.find(sentNode2->actorName);	
 
 	ActorNodeDS *sentinalNode1 = it_1->second;
 	ActorNodeDS *sentinalNode2 = it_2->second;
@@ -144,34 +140,44 @@ void DisjointSet::set_union(string actor_1, string actor_2){
 	if (sentinalNode1->size > sentinalNode2->size){
 		sentinalNode2->parent = sentinalNode1;
 		sentinalNode1->size += sentinalNode2->size;
+		cout << "Parent of smaller sentinal node: " << it_1->second->parent << endl;
 	}
 	else if (sentinalNode1->size < sentinalNode2->size){
 		sentinalNode1->parent = sentinalNode2;
 		sentinalNode2->size += sentinalNode1->size;
+		cout << "Parent of smaller sentinal node: " << it_2->second->parent << endl;
 	}
 	// sizes are equal, tie is given to first sentinal node
 	else{
 		sentinalNode2->parent = sentinalNode1;
 		sentinalNode1->size += 1;
+		cout << "Parent of smaller sentinal node: " << it_1->second->parent << endl;
 	}
+
+
 }
 
 // function will find the sentinal node of give actor, will be used for searching for two pairs
-string DisjointSet::find(string actorName){
+ActorNodeDS* DisjointSet::find(string actorName){
 
 	unordered_map<string, ActorNodeDS*>::iterator actorSet = mapOfSets.find(actorName);
+	if (actorSet == mapOfSets.end()){
+		cout << "Actor does not have a set year!" << endl;
+		return nullptr;
+	}
+
 	ActorNodeDS *currNode = actorSet->second;
 
 	// node is a sentinal node
 	if (currNode->parent->actorName == actorName){
-		return actorName;
+		return currNode;
 	}
 
 	// recursively call find on parents name until sentinal node reached
-	currNode->parent->actorName = find(currNode->parent->actorName);
+	currNode->parent = find(currNode->parent->actorName);
 	
 	// return name
-	return currNode->parent->actorName;
+	return currNode;;
 
 }
 
@@ -270,8 +276,7 @@ void DisjointSet::connectSets(vector<string> actorList){
 		cout << "calling union on the following two actors: " << actor1 << " " << actor2 << endl;
 
 		// set union between two actors
-		set_union(actor1, actor2);
-	
+		set_union(actor1, actor2);	
 	}
 
 }

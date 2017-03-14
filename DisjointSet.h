@@ -55,7 +55,7 @@ public:
 	void set_union(string actor_1, string actor_2);
 
 	// function will find the sentinal node of give actor, will be used for searching for two pairs
-	string find(string actorName);
+	ActorNodeDS* find(string actorName);
 
 	// Function will get films for a certain year and create sets for actors
 	void createSets(vector<string> titles);
