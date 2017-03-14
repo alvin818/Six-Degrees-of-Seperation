@@ -79,28 +79,26 @@ int main(int argc, char *argv[]){
 	// will hold pairs that have been found to avoid pointless searches
 	unordered_map<string, pair<string, string>> foundPairs;
 
+	// holds strings of the pairs and year they connected
 	unordered_map<string, string> connections;
 
 	// Do BFS on pairs until all pairs have been found or the year exceeds 2015
 	while (yearToStart < 2016){		
 		// create add actor nodes for given year
 		actor_graph.createGraph(yearToStart);
-		
+
 		// run BFS on all pairs
 		for (auto onePair = pairsToSearchFor.begin(); onePair != pairsToSearchFor.end(); onePair++){
 			// if search was successful then keep track of year and connect it with the pair
 			string pairKey = onePair->first + onePair->second;
 			unordered_map<string, pair<string, string>>::iterator got = foundPairs.find(pairKey);
-			if (got == foundPairs.end()){
-				
+			if (got == foundPairs.end()){				
 				// Match was found
 				if (actor_graph.BFSearchAC(get<1>(*onePair), get<0>(*onePair))) {
 					cout << "Earliest connection for pairs:" << get<1>(*onePair) << " " << get<0>(*onePair) << " "<< yearToStart << endl;
 					foundPairs[pairKey] = *onePair;
 					string pairAndYear = get<0>(*onePair) + "\t" + get<1>(*onePair) + "\t" + to_string(yearToStart);
-					connections[pairKey] = pairAndYear;
-					//cout << pairAndYear << endl;
-					//outFile << pairAndYear << endl;
+					connections[pairKey] = pairAndYear;				
 				}
 			}				
 		}
@@ -109,17 +107,10 @@ int main(int argc, char *argv[]){
 			cout << "All pairs have been found" << endl;
 			break;
 		}
+		// increment year until all pairs have been found
 		yearToStart++;
-	}
-  
-
-	cout << "BLAH" << endl;
-	// Now print result to output file in correct order
-
-	//outFile.close();
-
-	//ofstream out_File(out_file, ofstream::out);
-  
+	}	
+	// print results to file 
 	actor_graph.printActorConnections(connections, pairsToSearchFor, outFile);
 
 

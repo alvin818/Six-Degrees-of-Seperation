@@ -564,13 +564,7 @@ vector<pair<string, string>> ActorGraph::getActorPairs(const char* actorPairs){
 
 
 		string actor_1(record[0]);
-		string actor_2(record[1]);
-
-		//string key = actor_1 + actor_2;
-
-		//actor_1 = ("(" + actor_1 + ")");
-		//actor_2 = ("(" + actor_2 + ")");
-
+		string actor_2(record[1]);		
 
 		cout << "Pair to find: " << actor_1 << "\t" << actor_2 << endl;
 
@@ -591,7 +585,7 @@ vector<pair<string, string>> ActorGraph::getActorPairs(const char* actorPairs){
 }
 
 /*
-  Will return the oldest movie year with its corresponding actor
+  Will return the oldest movie year with its corresponding actor.
   */
 int ActorGraph::findOldestFilmYear(const char *in_filename, vector<string> actors){
 
@@ -651,8 +645,6 @@ int ActorGraph::findOldestFilmYear(const char *in_filename, vector<string> actor
 		return -1;
 	}
 
-
-
 	infile.close();
 
 	return oldestMovieYear;
@@ -661,7 +653,7 @@ int ActorGraph::findOldestFilmYear(const char *in_filename, vector<string> actor
 }
 
 /*
-
+	Function create movie object but only with films older and including the start year
 */
 void ActorGraph::createMovieObjects(const char* in_filename, int startYear){
 	// Initialize the file stream
@@ -736,8 +728,7 @@ void ActorGraph::createMovieObjects(const char* in_filename, int startYear){
 			}
 
 		}
-		else
-			cout << "Movie too old dawg... " << movie_title << " " << movie_year << endl;
+		
 		/*
 		   At this point the unordered_map of movie objects has been filled.
 		   Now create the actorNodes using this data.
@@ -807,23 +798,28 @@ void ActorGraph::createGraph(int yearToPop){
 
 }
 
+/*
+	Prints the results of actorconnections to the output file
+*/
 void ActorGraph::printActorConnections(unordered_map<string, string> connections, vector<pair<string, string>> pairsToSearchFor, ofstream& outFile){
 	
-	cout << "Writing results to file .....";
+	// write header to file
 	outFile << "Actor1\tActor2\tYear" << endl;
 	//print results to out file for each actor pair
 	for (auto pairs = pairsToSearchFor.begin(); pairs != pairsToSearchFor.end(); pairs++){
+		// use key to print the results in correct order
 		string key = pairs->first + pairs->second;
 		unordered_map<string, string>::iterator pairToPrint = connections.find(key);
 		outFile << pairToPrint->second << endl;
 		cout << pairToPrint->second << endl;	
 	}
 
-	cout << " done" << endl;
-
 }
 
-
+/*
+	Function does breadth first search using two actor names. Returns true if there exists a path between the two actors
+	false if it does not.
+*/
 bool ActorGraph::BFSearchAC(string startActor, string actorToFind){
 
 	// get node using actors name
@@ -880,7 +876,7 @@ bool ActorGraph::BFSearchAC(string startActor, string actorToFind){
 		}
 
 	}
-	//cout << "LOL sorry connection you are searching for does not exist, try again buddy" << endl;
+	
 	return false;
 }
 
