@@ -881,13 +881,13 @@ bool ActorGraph::BFSearchAC(string startActor, string actorToFind){
 // Destructor
 ActorGraph::~ActorGraph(){
 	
-	//// free memory in both hashmaps
-	//for (auto it = movies_map.begin(); it != movies_map.end(); it++){
-	//	delete it->second;
-	//}
-	//
-	////unordered_map<string, ActorNode*> tempMap;
-	////actorNode_map.swap(tempMap);
+	// free memory in both hashmaps
+	for (auto it = movies_map.begin(); it != movies_map.end(); it++){
+		delete it->second;
+	}
+	
+	//unordered_map<string, ActorNode*> tempMap;
+	//actorNode_map.swap(tempMap);
 
 	
 	for (auto it = actorNode_map.begin(); it != actorNode_map.end(); it++){
