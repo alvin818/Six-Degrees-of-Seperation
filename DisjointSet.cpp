@@ -114,14 +114,10 @@ void DisjointSet::addMoviesToPQ(){
 void DisjointSet::set_union(string actor_1, string actor_2){
 	
 	ActorNodeDS* sentNode1 = find(actor_1);
-	ActorNodeDS* sentNode2 = find(actor_2);
-
-	cout << "Sentinal node for actor 1: " << sentNode1->actorName << endl;
-	cout << "Sentinal node for actor 2: " << sentNode2->actorName << endl;
+	ActorNodeDS* sentNode2 = find(actor_2);	
 
 	// already in the same set
-	if (sentNode1 == sentNode2){
-		cout << "Actors are already in same set" << endl;
+	if (sentNode1 == sentNode2){		
 		return;
 	}
 	
@@ -140,19 +136,16 @@ void DisjointSet::set_union(string actor_1, string actor_2){
 	// add size of smaller node to larger node
 	if (sentinalNode1->size > sentinalNode2->size){
 		sentinalNode2->parent = sentinalNode1;
-		sentinalNode1->size += sentinalNode2->size;
-		cout << "Parent of smaller sentinal node: " << it_1->second->parent->actorName << endl;
+		sentinalNode1->size += sentinalNode2->size;		
 	}
 	else if (sentinalNode1->size < sentinalNode2->size){
 		sentinalNode1->parent = sentinalNode2;
-		sentinalNode2->size += sentinalNode1->size;
-		cout << "Parent of smaller sentinal node: " << it_2->second->parent->actorName << endl;
+		sentinalNode2->size += sentinalNode1->size;		
 	}
 	// sizes are equal, tie is given to first sentinal node
 	else{
 		sentinalNode2->parent = sentinalNode1;
-		sentinalNode1->size += 1;
-		cout << "Parent of smaller sentinal node: " << it_1->second->parent->actorName << endl;
+		sentinalNode1->size += 1;		
 	}
 
 
@@ -162,8 +155,7 @@ void DisjointSet::set_union(string actor_1, string actor_2){
 ActorNodeDS* DisjointSet::find(string actorName){
 
 	unordered_map<string, ActorNodeDS*>::iterator actorSet = mapOfSets.find(actorName);
-	if (actorSet == mapOfSets.end()){
-		cout << "Actor does not have a set yet!" << endl;
+	if (actorSet == mapOfSets.end()){		
 		return nullptr;
 	}
 
@@ -173,18 +165,7 @@ ActorNodeDS* DisjointSet::find(string actorName){
 		currNode->parent = find(currNode->parent->actorName);
 	}
 
-	return currNode->parent;
-
-	//// node is a sentinal node
-	//if (currNode->parent->actorName == actorName){
-	//	return currNode;
-	//}
-
-	//// recursively call find on parents name until sentinal node reached
-	//currNode = find(currNode->parent->actorName);
-	//
-	//// return name
-	//return currNode;;
+	return currNode->parent;	
 
 }
 
@@ -194,9 +175,7 @@ void DisjointSet::createSets(vector<string> movie_titles){
 	// For each movie title, get movie object
 	for (auto movieIt = movie_titles.begin(); movieIt != movie_titles.end(); movieIt++){
 		// get movie object
-		MovieDS* movie = getMovie(*movieIt);
-		cout << endl;
-		cout << "Creating sets with actors from film: " << movie->movieName << endl;
+		MovieDS* movie = getMovie(*movieIt);		
 		// get actor list
 		vector<string> actorList = movie->_actors;
 
@@ -259,17 +238,13 @@ void DisjointSet::searchActorList(vector<string> actorList){
 		
 		// if it doesnt exit then create sentinal node
 		if(actorSet == mapOfSets.end()){
-			ActorNodeDS *newActorNode = new ActorNodeDS(*actor_it);
-			cout << "Creating single set for actor : " << *actor_it << endl;
+			ActorNodeDS *newActorNode = new ActorNodeDS(*actor_it);			
 			// set its parent to itself
 			newActorNode->parent = newActorNode;
 			// add to map
 			mapOfSets[*actor_it] = newActorNode;			
 		}
-		// actor already has a set made, iterator hold actor node and key
-		else{
-			cout << "Set for actor: "<< actorSet->first << " already exits" << endl;
-		}	
+		// actor already has a set made, iterator hold actor node and key		
 	}
 
 }
@@ -279,8 +254,6 @@ void DisjointSet::connectSets(vector<string> actorList){
 	for (unsigned int i = 1; i < actorList.size(); i++){
 		string actor1 = actorList.at(i - 1);
 		string actor2 = actorList.at(i);
-
-		cout << "calling union on the following two actors: " << actor1 << " " << actor2 << endl;
 
 		// set union between two actors
 		set_union(actor1, actor2);	
