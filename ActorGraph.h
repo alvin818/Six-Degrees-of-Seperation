@@ -44,9 +44,7 @@ public:
 };
 
  class ActorGraph {
- protected:
-  
-    // Maybe add class data structure(s) here
+ protected:   
 
     // will hold actorNodes and use actor names as key
     unordered_map<string, ActorNode*> actorNode_map;
@@ -96,20 +94,25 @@ public:
     // method wil perform breadth first search using dijkstra's algorithm
     void dijkstraSearch(string, string, ofstream&);
 
+	// writes path to file
 	void printWeightedPath(unordered_map<string, string>, ActorNode*, ofstream&);
-
+	
+	// Resets actor nodes for weighted BFS
 	void resetNodes(unordered_set<string>);
 
+	// Adds movies to priority queue
     void addMovieObjects();
-
+	
+	// Creates nodes using films made in given year
     void createGraph(int startYear);
 
+	// Prints to output file
 	void printActorConnections(unordered_map<string, string>, vector<pair<string, string>>, ofstream&);
 
 	// BFS for actor connections
 	bool BFSearchAC(string startActor, string actorToFind);
 
-    /** You can modify this method definition as you wish
+    /** 
      *
      * Load the graph from a tab-delimited file of actor->movie relationships.
      *

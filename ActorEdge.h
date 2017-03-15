@@ -17,7 +17,6 @@
    class ActorEdge {
 
    public:
-
 	/* 
 	   Edge will contain a pair: 
 	   movie (name + year) & name of costar 

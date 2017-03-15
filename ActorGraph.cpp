@@ -883,10 +883,11 @@ ActorGraph::~ActorGraph(){
 	for (auto it = movies_map.begin(); it != movies_map.end(); it++){
 		delete it->second;
 	}
-	unordered_map<string, ActorNode*> tempMap;
-	actorNode_map.swap(tempMap);
+	
+	//unordered_map<string, ActorNode*> tempMap;
+	//actorNode_map.swap(tempMap);
 
-	/*
+	
 	for (auto it = actorNode_map.begin(); it != actorNode_map.end(); it++){
 
 		for (auto it2 = it->second->movieEdges.begin(); it2 != it->second->movieEdges.end(); it2++){
@@ -894,7 +895,7 @@ ActorGraph::~ActorGraph(){
 		}
 		delete it->second;
 	}
-	*/
+	
 }
 
 
