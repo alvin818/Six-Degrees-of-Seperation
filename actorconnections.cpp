@@ -67,7 +67,7 @@ int main(int argc, char *argv[]){
 
 	if (typeOfSearch == "bfs"){
 		// sanity print statement
-		cout << "Earliest movie year in actors to search for is: " << yearToStart << endl;
+		cout << "Implementing actor connections using BFS" << endl;
 		/*
 			Using this year, a graph can be built using all movies starting from this year and forward.
 			Create movie objects for each year and place into priority queue that orders the objects from
@@ -121,9 +121,7 @@ int main(int argc, char *argv[]){
 
 	// Disjoint Set Search
 	else{
-		// sanity print statement
-		cout << "Earliest movie year in actors to search for is: " << yearToStart << endl;
-
+		
 		cout << "Implementing actor connections using union find!" << endl;
 		
 
@@ -149,29 +147,20 @@ int main(int argc, char *argv[]){
 		while (yearToStart < 2016){
 
 			// Now create sets from given year
-			vector<string> movieTitles = actor_set.getMoviesFromYear(yearToStart);
-
-			cout << "Movies in year : " << yearToStart << endl;
+			vector<string> movieTitles = actor_set.getMoviesFromYear(yearToStart);		
 			
+			// if no movies have given year skip search
 			if (movieTitles.size() == 0){
 				yearToStart++;
 				continue;
-			}
-
-			for (auto it = movieTitles.begin(); it != movieTitles.end(); it++){
-				cout << *it << endl;
-			}
+			}			
 
 			// create the sets and put into map
-			actor_set.createSets(movieTitles);
-
-			// Now create unions between the sets 
-			//actor_set.connectSets(movieTitles);
+			actor_set.createSets(movieTitles);			
 
 			// Now search for the pairs if it has not been found		
 			for (auto onePair = pairsToSearchFor.begin(); onePair != pairsToSearchFor.end(); onePair++){
 
-				cout << "Searching for actor pairs: " << onePair->first << " " << onePair->second << endl;
 				string pairKey = onePair->first + onePair->second;
 
 				auto it = found_pairs.find(pairKey);
@@ -189,10 +178,7 @@ int main(int argc, char *argv[]){
 							found_pairs[pairKey] = *onePair;
 							string pairAndYear = get<0>(*onePair) + "\t" + get<1>(*onePair) + "\t" + to_string(yearToStart);
 							connections[pairKey] = pairAndYear;
-						}
-						else{
-							cout << "No connection was found..." << endl;
-						}
+						}						
 					}					
 				}
 
