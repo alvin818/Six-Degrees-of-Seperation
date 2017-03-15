@@ -62,6 +62,7 @@ bool DisjointSet::getMoviesFromFile(const char* in_filename, int startYear){
 		string movie_title(record[1]);
 		int movie_year = stoi(record[2]);	
 
+		// Only read in films made during and after given year
 		if (movie_year >= startYear){
 
 			// Combine movie title and year into string variable
@@ -154,17 +155,23 @@ void DisjointSet::set_union(string actor_1, string actor_2){
 // function will find the sentinal node of give actor, will be used for searching for two pairs
 ActorNodeDS* DisjointSet::find(string actorName){
 
+	// See if actor has a set created
 	unordered_map<string, ActorNodeDS*>::iterator actorSet = mapOfSets.find(actorName);
+	
+	// Return null pointer if actor set does NOT exist
 	if (actorSet == mapOfSets.end()){		
 		return nullptr;
 	}
-
+	
+	// Get movie objects
 	ActorNodeDS *currNode = actorSet->second;
 
+	// Recursively call find on parent
 	if (currNode != currNode->parent){	
 		currNode->parent = find(currNode->parent->actorName);
 	}
-
+	
+	// return parent node
 	return currNode->parent;	
 
 }
@@ -192,7 +199,9 @@ void DisjointSet::createSets(vector<string> movie_titles){
 
 
 }
-
+/*
+	returns vector of film names for the given year parameter
+*/
 vector<string> DisjointSet::getMoviesFromYear(int year){
 
 	vector<string> movieTitles;
@@ -220,7 +229,7 @@ vector<string> DisjointSet::getMoviesFromYear(int year){
 
 }
 
-
+// returns movie object using key
 MovieDS* DisjointSet::getMovie(string key){
 	return movies[key];
 }
@@ -249,6 +258,9 @@ void DisjointSet::searchActorList(vector<string> actorList){
 
 }
 
+/*
+	gets pair of actors and calls set_union function
+*/
 void DisjointSet::connectSets(vector<string> actorList){
 	// Now connect the sets using first two actors from list
 	for (unsigned int i = 1; i < actorList.size(); i++){
@@ -257,6 +269,20 @@ void DisjointSet::connectSets(vector<string> actorList){
 
 		// set union between two actors
 		set_union(actor1, actor2);	
+	}
+
+}
+
+
+DisjointSet::~DisjointSet(){
+	
+	// free memory
+	for (auto it = movies.begin(); it != movies.end(); it++){
+		delete it->second;
+	}
+
+	for (auto it = mapOfSets.begin(); it != mapOfSets.end(); it++){
+		delete it->second;
 	}
 
 }

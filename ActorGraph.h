@@ -64,6 +64,8 @@ public:
 public:
     ActorGraph(void);
 
+	// Destructor
+	~ActorGraph();
     
 	// Creates ActorNodes
     void createActorNodes();

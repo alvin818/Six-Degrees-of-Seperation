@@ -3,7 +3,8 @@
  * Author: Alvin Vanegas
  * Date:   2/25/17
  * Winter 2017
- * Overview: TODO
+ * Overview: This function finds the earliest year in which two actors are connected. It performs this search
+   using breadth first search or union find using disjoint sets. 
  */
 
 #include <iostream>
@@ -39,30 +40,30 @@ int main(int argc, char *argv[]){
 	string typeOfSearch = argv[4];
 	
 
-		// Create instance of an actorGraph
-		ActorGraph actor_graph;
+	// Create instance of an actorGraph
+	ActorGraph actor_graph;
 
-		// Create instance of disjoint set
-		DisjointSet actor_set;
-
-
-		// get vector of pairs (actor 1, actor 2)
-		vector<pair<string, string>> pairsToSearchFor = actor_graph.getActorPairs(test_pairs);
+	// Create instance of disjoint set
+	DisjointSet actor_set;
 
 
-		vector<string> actorsToSearchfor;
-
-		// Add actor pairs to new vector of strings
-		for (auto onePair = pairsToSearchFor.begin(); onePair != pairsToSearchFor.end(); onePair++){
-
-			// push each element of pair to vector		
-			actorsToSearchfor.push_back(get<0>(*onePair));
-			actorsToSearchfor.push_back(get<1>(*onePair));
-		}
+	// get vector of pairs (actor 1, actor 2)
+	vector<pair<string, string>> pairsToSearchFor = actor_graph.getActorPairs(test_pairs);
 
 
-		// Now find the earliest year to begin building graph
-		int yearToStart = actor_graph.findOldestFilmYear(movie_casts, actorsToSearchfor);
+	vector<string> actorsToSearchfor;
+
+	// Add actor pairs to new vector of strings
+	for (auto onePair = pairsToSearchFor.begin(); onePair != pairsToSearchFor.end(); onePair++){
+
+		// push each element of pair to vector		
+		actorsToSearchfor.push_back(get<0>(*onePair));
+		actorsToSearchfor.push_back(get<1>(*onePair));
+	}
+
+
+	// Now find the earliest year to begin building graph
+	int yearToStart = actor_graph.findOldestFilmYear(movie_casts, actorsToSearchfor);
 		
 
 	if (typeOfSearch == "bfs"){
@@ -72,7 +73,7 @@ int main(int argc, char *argv[]){
 			Using this year, a graph can be built using all movies starting from this year and forward.
 			Create movie objects for each year and place into priority queue that orders the objects from
 			increasing year.
-			*/
+		*/
 
 		actor_graph.createMovieObjects(movie_casts, yearToStart);
 
@@ -81,7 +82,7 @@ int main(int argc, char *argv[]){
 
 		/*
 			Now build graph using queue of movie objects
-			*/
+		*/
 
 		// will hold pairs that have been found to avoid pointless searches
 		unordered_map<string, pair<string, string>> foundPairs;
@@ -96,13 +97,18 @@ int main(int argc, char *argv[]){
 
 			// run BFS on all pairs
 			for (auto onePair = pairsToSearchFor.begin(); onePair != pairsToSearchFor.end(); onePair++){
+
 				// if search was successful then keep track of year and connect it with the pair
 				string pairKey = onePair->first + onePair->second;
+
+				// Only search pairs that have not been found
 				unordered_map<string, pair<string, string>>::iterator got = foundPairs.find(pairKey);
 				if (got == foundPairs.end()){
+
 					// Match was found
 					if (actor_graph.BFSearchAC(get<1>(*onePair), get<0>(*onePair))) {
 						foundPairs[pairKey] = *onePair;
+						// Get actor pairs and year of first match and combine
 						string pairAndYear = get<0>(*onePair) + "\t" + get<1>(*onePair) + "\t" + to_string(yearToStart);
 						connections[pairKey] = pairAndYear;
 					}
@@ -126,13 +132,11 @@ int main(int argc, char *argv[]){
 		
 
 		// get movies starting from given year
-		actor_set.getMoviesFromFile(movie_casts, yearToStart);
+		actor_set.getMoviesFromFile(movie_casts, yearToStart);	
 		
-		cout << "Got movies from input file!" << endl;
 		// Add objects to priority queue
 		actor_set.addMoviesToPQ();
-
-		cout << "Added movies to priorty queue" << endl;
+		
 
 		// will hold pairs that have been found to avoid pointless searches
 		unordered_map<string, pair<string, string>> found_pairs;
@@ -167,14 +171,14 @@ int main(int argc, char *argv[]){
 
 				// if pair has not been found then search
 				if (it == found_pairs.end()){
+
 					// Get sentinal node for each pair, if it exist
 					ActorNodeDS *sent_1 = actor_set.find(onePair->first);
 					ActorNodeDS *sent_2 = actor_set.find(onePair->second);
 					// Either both or one of the pairs does not have a set created yeat
 					if (sent_1 && sent_2){
 						// PAIR HAS BEEN FOUND
-						if (sent_1->actorName == sent_2->actorName){
-							cout << "CONNECTION HAS BEEN FOUND IN EAR: " << yearToStart << endl;
+						if (sent_1->actorName == sent_2->actorName){							
 							found_pairs[pairKey] = *onePair;
 							string pairAndYear = get<0>(*onePair) + "\t" + get<1>(*onePair) + "\t" + to_string(yearToStart);
 							connections[pairKey] = pairAndYear;

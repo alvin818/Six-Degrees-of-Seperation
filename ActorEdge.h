@@ -25,11 +25,9 @@
 	   string movieInfo;
 	// name of co-star in film
 	   string coStarName;
-
 	// Weight of the edge
 	   int weight;
-
-
+	   // Constructor for edge class
 	   ActorEdge(string movie, string name, int weight);
 	};
 

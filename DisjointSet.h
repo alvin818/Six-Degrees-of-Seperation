@@ -1,8 +1,11 @@
 /*
- Name:
- TODO
+* File: DisjointSet.h
+* Author: Alvin Vanegas
+* Date:   3/14/17
+* Winter 2017
+* Overview: header file for disjoint set class which will have all needed function declarations
+  needed for disjoint set search
 */
-
 
 #ifndef DISJOINTSET_H
 #define DISJOINTSET_H
@@ -28,6 +31,9 @@ public:
 
 class DisjointSet {
 protected:
+
+	// destructor
+	~DisjointSet();
 
 	// Map will hold movies already created
 	unordered_map<string, MovieDS*> movies;
@@ -60,20 +66,19 @@ public:
 	// Function will get films for a certain year and create sets for actors
 	void createSets(vector<string> titles);
 
+	// gets all names of films made in a given year
 	vector<string> getMoviesFromYear(int currYear);
 
+	// Getter for movie objects
 	MovieDS* getMovie(string key);
 
+	// Function will create single sets for each actor of a given film
 	void searchActorList(vector<string> actors);
 
+	// using actors, connects the sets of a specific film
 	void connectSets(vector<string> actors);
 
 };
-
-
-
-
-
 
 
 #endif

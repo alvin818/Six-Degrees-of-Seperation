@@ -22,6 +22,7 @@
  	movieName = name;
  }
 
+ // defines operator for movie objects, giving older films priority
  bool Movie::operator<(Movie const & other){
   // if movie yers are different, just compare movie years
   if(movieYear != other.movieYear)
