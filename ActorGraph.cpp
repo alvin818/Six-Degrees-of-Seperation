@@ -189,6 +189,8 @@ ActorNode* ActorGraph::createEdges(ActorNode* node, unordered_set<string> actorL
 			ActorEdge *newEdge = new ActorEdge(movieName, *actor, weight);
 			// Add new edge to actor node
 			node->movieEdges.insert(newEdge);
+			// Add edges to unordered set
+			edges.insert(newEdge);
 		}
 
 	}
@@ -878,7 +880,7 @@ bool ActorGraph::BFSearchAC(string startActor, string actorToFind){
 
 // Destructor
 ActorGraph::~ActorGraph(){
-	cout << "Freeing memory!" << endl;
+	
 	// free memory in both hashmaps
 	for (auto it = movies_map.begin(); it != movies_map.end(); it++){
 		delete it->second;
@@ -889,11 +891,16 @@ ActorGraph::~ActorGraph(){
 
 	
 	for (auto it = actorNode_map.begin(); it != actorNode_map.end(); it++){
-
+		/*
 		for (auto it2 = it->second->movieEdges.begin(); it2 != it->second->movieEdges.end(); it2++){
 			delete *it2;
 		}
+		*/
 		delete it->second;
+	}
+
+	for (auto it = edges.begin(); it != edges.end(); it++){
+		delete *it;
 	}
 	
 }

@@ -58,6 +58,9 @@ public:
     // will hold movie objects for actor connections
     priority_queue<Movie*, vector<Movie*>, MoviePtrComp> movieObjects;
 
+	// Holds edges created
+	unordered_set<ActorEdge*> edges;
+
 
 public:
     ActorGraph(void);
