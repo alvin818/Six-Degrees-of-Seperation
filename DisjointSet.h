@@ -32,9 +32,6 @@ public:
 class DisjointSet {
 protected:
 
-	// destructor
-	~DisjointSet();
-
 	// Map will hold movies already created
 	unordered_map<string, MovieDS*> movies;
 
@@ -50,6 +47,9 @@ protected:
 
 public:
 	DisjointSet(void);
+
+	// destructor
+	~DisjointSet();
 	
 	// Function will will create film object starting from given year
 	bool getMoviesFromFile(const char* in_filename, int startYear);
