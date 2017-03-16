@@ -714,11 +714,9 @@ void ActorGraph::createMovieObjects(const char* in_filename, int startYear){
 				Movie *newMovie = new Movie(movie_year, movieKey);
 				newMovie->_actors.insert(actor_name);
 
-				// Make a pair with movie name and movie object
-				pair<string, Movie*> moviePair(movieKey, newMovie);
-
 				// insert the pair into the movie map
-				movies_map.insert(moviePair);
+				movies_map[movieKey] = newMovie;
+				
 			}
 
 			// Add actor to movie object returned by the iterator
