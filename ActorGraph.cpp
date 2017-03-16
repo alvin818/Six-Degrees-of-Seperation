@@ -889,11 +889,11 @@ ActorGraph::~ActorGraph(){
 
 	
 	for (auto it = actorNode_map.begin(); it != actorNode_map.end(); it++){
-		/*
+		
 		for (auto it2 = it->second->movieEdges.begin(); it2 != it->second->movieEdges.end(); it2++){
 			delete *it2;
 		}
-		*/
+		
 		delete it->second;
 	}
 
